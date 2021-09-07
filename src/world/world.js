@@ -25,6 +25,17 @@ class World{
         });
     }
 
+    getChunk(x,z){
+        var chunkX = Math.floor(x/16);
+        var chunkZ = Math.floor(z/16);
+        //console.log(chunkX+"("+x+") "+chunkZ+"("+z+")");
+        var chunk;
+        this.chunks.forEach(c => {
+            if (c.chunkPos.x == chunkX && c.chunkPos.z == chunkZ) chunk = c;
+        });
+        return chunk;
+    }
+
 }
 
 export default World;

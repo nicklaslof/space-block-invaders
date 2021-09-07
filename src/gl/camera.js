@@ -36,7 +36,7 @@ class Camera{
     //Update the rotation of the camera quaterantion.
     updateRotation(){
         this.currentRot = this.currentRot%(Math.PI*2);
-        if (this.currentRot < 0) this.currentRot = Math.PI*2;
+        //if (this.currentRot < 0) this.currentRot = Math.PI*2;
         quaternion.fromEuler(this.quaternion, 0, this.getRotationDeg(), 0);
     }
 
@@ -51,7 +51,10 @@ class Camera{
 
     //Set the position of the camera and recalculate rotation and position
     setPos(position){
-        this.position = position;
+        this.position.x = position.x;
+        this.position.y = position.y + 2.6;
+        this.position.z = position.z;
+   
         this.updatePerspective();
         this.updateRotationTranslation();
     }

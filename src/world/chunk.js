@@ -2,11 +2,11 @@ import MeshBuilder from "../gl/meshbuilder.js";
 class Chunk{
     constructor(game, pos,noise,noise2) {
         this.worldPos = pos;
-        this.chunkPos = {x:pos.x/16,y:pos.z/16};
+        this.chunkPos = {x:pos.x/16,z:pos.z/16};
         console.log("Creating chunk :"+pos.x+" "+pos.z+ "   "+this.chunkPos.x+"  "+this.chunkPos.z);
 
 
-        this.blocks = [16*16*64];
+        this.blocks = [];
        /* for (let x = 0; x < 16; x++) {
             for (let z = 0; z < 16; z++) {
                 for (let y = 0; y < 64; y++) {
@@ -15,6 +15,15 @@ class Chunk{
                 }
             }
         }*/
+
+          /*for (let x = 0; x < 16; x++) {
+
+                 for (let z = 0; z < 16; z++) {
+                     for (let y = 0; y < 64; y++) {
+                         if (y != 16 && z > 0 && z < 5 && x > 0 && x < 5)this.setBlockAt(x,y,z,game.blocks.grass);
+                     }
+                    }
+                }*/
 
         for (let x = 0; x < 16; x++) {
 
@@ -71,12 +80,12 @@ class Chunk{
                     var blockId = this.getBlockAt(x,y,z);
                     if (blockId != undefined){
                         var block = game.blocks.get(blockId);
-                        if (this.getBlockAt(x,y+1,z) == undefined) MeshBuilder.top(block.topTexture.getUVs(),m,x,y,z,1,1,block.topColor);
-                        if (this.getBlockAt(x-1,y,z) == undefined) MeshBuilder.left(block.sideTexture.getUVs(),m,x,y,z,0.7,1,1,block.sideColor);
-                        if (this.getBlockAt(x+1,y,z) == undefined) MeshBuilder.right(block.sideTexture.getUVs(),m,x,y,z,1,1,1,block.sideColor);
-                        if (this.getBlockAt(x,y,z+1) == undefined) MeshBuilder.front(block.sideTexture.getUVs(),m,x,y,z,0.8,1,1,block.sideColor);
-                        if (this.getBlockAt(x,y,z-1) == undefined) MeshBuilder.back(block.sideTexture.getUVs(),m,x,y,z,1,1,1,block.sideColor);
-                        if (this.getBlockAt(x,y-1,z) == undefined) MeshBuilder.bottom(block.sideTexture.getUVs(),m,x,y,z,1,1,block.sideColor);
+                        if (this.getBlockAt(x,y+1,z) == undefined) MeshBuilder.top(block.topTexture.getUVs(),m,x,y,z,1,block.topColor);
+                        if (this.getBlockAt(x-1,y,z) == undefined) MeshBuilder.left(block.sideTexture.getUVs(),m,x,y,z,0.7,1,block.sideColor);
+                        if (this.getBlockAt(x+1,y,z) == undefined) MeshBuilder.right(block.sideTexture.getUVs(),m,x,y,z,1,1,block.sideColor);
+                        if (this.getBlockAt(x,y,z+1) == undefined) MeshBuilder.front(block.sideTexture.getUVs(),m,x,y,z,0.8,1,block.sideColor);
+                        if (this.getBlockAt(x,y,z-1) == undefined) MeshBuilder.back(block.sideTexture.getUVs(),m,x,y,z,1,1,block.sideColor);
+                        if (this.getBlockAt(x,y-1,z) == undefined) MeshBuilder.bottom(block.sideTexture.getUVs(),m,x,y,z,1,block.sideColor);
                     }
                 }
             }   

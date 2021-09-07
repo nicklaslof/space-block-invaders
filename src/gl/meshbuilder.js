@@ -28,9 +28,8 @@ class MeshBuilder{
     }
 
     //Add left side of the mesh. Heigth and offset can be specified(Used for walls being two units high and lava being offseted slightly down)
-    static left(uvs,render,x,y,z,light,height,yOffset,color){
+    static left(uvs,render,x,y,z,light,height,color){
         if (height == null) height = 1;
-        if (yOffset!=null) y += yOffset;
         for(let h = 0; h < height; h++){
             MeshBuilder.addColor(render.colors,color);
             MeshBuilder.addLight(render.lights,light);
@@ -45,9 +44,8 @@ class MeshBuilder{
 
     }
     //Add right side of the mesh. Heigth and offset can be specified(Used for walls being two units high and lava being offseted slightly down)
-    static right(uvs,render,x,y,z,light,height,yOffset,color){
+    static right(uvs,render,x,y,z,light,height,color){
         if (height == null) height = 1;
-        if (yOffset!=null) y += yOffset;
         for(let h = 0; h < height; h++){
             MeshBuilder.addColor(render.colors,color);
             MeshBuilder.addLight(render.lights,light);
@@ -61,9 +59,8 @@ class MeshBuilder{
         }
     }
     //Add front side of the mesh. Heigth and offset can be specified(Used for walls being two units high and lava being offseted slightly down)
-    static front(uvs,render,x,y,z,light,height,yOffset,color){
+    static front(uvs,render,x,y,z,light,height,color){
         if (height == null) height = 1;
-        if (yOffset!=null) y += yOffset;
         for(let h = 0; h < height; h++){
             MeshBuilder.addColor(render.colors,color);
             MeshBuilder.addLight(render.lights,light);
@@ -77,9 +74,8 @@ class MeshBuilder{
         }
     }
     //Add back side of the mesh. Heigth and offset can be specified(Used for walls being two units high and lava being offseted slightly down)
-    static back(uvs,render,x,y,z,light,height,yOffset,color){
+    static back(uvs,render,x,y,z,light,height,color){
         if (height == null) height = 1;
-        if (yOffset!=null) y += yOffset;
         for(let h = 0; h < height; h++){
             MeshBuilder.addColor(render.colors,color);
             MeshBuilder.addLight(render.lights,light);
@@ -95,8 +91,7 @@ class MeshBuilder{
     }
 
     //Add left side of the mesh. Offset can be specified(Used for walls being two units high and lava being offseted slightly down)
-    static top(uvs,render,x,y,z,light,yOffset, color){
-        if (yOffset!=null) y += yOffset;
+    static top(uvs,render,x,y,z,light, color){
         MeshBuilder.addColor(render.colors,color);
         MeshBuilder.addLight(render.lights,light);
         uvs.forEach(uv => { render.uvs.push(uv); });
@@ -107,9 +102,8 @@ class MeshBuilder{
             x+baseSize,y+baseSize,z-baseSize
         );
     }
-    static bottom(uvs,render,x,y,z,light,yOffset, color){
+    static bottom(uvs,render,x,y,z,light, color){
 
-        if (yOffset!=null) y += yOffset;
         MeshBuilder.addColor(render.colors,color);
         MeshBuilder.addLight(render.lights,light);
         uvs.forEach(uv => { render.uvs.push(uv); });
