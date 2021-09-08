@@ -54,7 +54,7 @@ class Camera{
         this.position.x = position.x;
         this.position.y = position.y + 4;
         this.position.z = position.z;
-   
+        console.log(this.position);
         this.updatePerspective();
         this.updateRotationTranslation();
     }

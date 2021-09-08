@@ -1,8 +1,10 @@
+import Player from "../entity/player.js";
 import Chunk from "./chunk.js";
 
 class World{
     constructor(game, sizeX, sizeZ) {
         this.chunks = [];
+        this.entites = [];
         this.noise = new SimplexNoise();
         this.noise2 = new SimplexNoise();
 
@@ -11,17 +13,28 @@ class World{
                 this.chunks.push(new Chunk(game, {x:x,z:z},this.noise,this.noise2));       
             }
         }
+
+        this.entites.push(new Player(64,64,64));
     }
 
     tick(game, deltaTime){
-       this.chunks.forEach(c => {
+        this.chunks.forEach(c => {
            c.tick(game,deltaTime);
        });
+
+        this.entites.forEach(e => {
+            e.tick(game,deltaTime);
+        });
+
     }
 
     render(game){
         this.chunks.forEach(c => {
             c.render(game);
+        });
+
+        this.entites.forEach(e => {
+            e.render(game);
         });
     }
 
