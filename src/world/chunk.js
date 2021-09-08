@@ -88,12 +88,12 @@ class Chunk{
                     var n5 = noise2.noise3d((this.worldPos.x + x) * 0.05, y * 0.01, (this.worldPos.z + z) * 0.05);
                     var nf = n * n2 / n3;
                     //if (n4 * 32 > y) nf -= n4/2;
-                    if (nf * 64 > y && n4 + n5 < 0.4) {
+                    if (nf * 64 > y && n4 + n5 < 0.8) {
                         this.setBlockAt(x, y, z, game.blocks.limestone);
                     }
 
-                    n = noise2.noise((this.worldPos.x + x) * 0.008, (this.worldPos.z + z) * 0.008);
-                    n2 = noise.noise((this.worldPos.x + x) * 0.005, (this.worldPos.z + z) * 0.005)*2;
+                    n = noise2.noise((this.worldPos.x + x) * 0.008, (this.worldPos.z + z) * 0.008)*2;
+                    n2 = noise.noise((this.worldPos.x + x) * 0.005, (this.worldPos.z + z) * 0.005)*5;
                     if ((n+n2) * 32 > y) {
                         this.setBlockAt(x, y, z, game.blocks.dirt);
                     }

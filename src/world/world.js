@@ -14,7 +14,7 @@ class World{
             }
         }
 
-        this.entites.push(new Player(32,32,32));
+        this.entites.push(new Player(64,32,64));
     }
 
     tick(game, deltaTime){
