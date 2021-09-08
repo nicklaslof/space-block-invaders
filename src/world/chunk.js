@@ -78,7 +78,9 @@ class Chunk{
 
             for (let z = 0; z < 16; z++) {
                 for (let y = 0; y < 64; y++) {
-                    if (y < 20){
+                    if (y == 0) this.setBlockAt(x, y, z, game.blocks.dirt);
+                }
+                /*    if (y < 20){
                         this.setBlockAt(x, y, z, game.blocks.dirt);
                         continue;
                     }
@@ -99,7 +101,7 @@ class Chunk{
                     if ((n+n2) * 32 > y) {
                         this.setBlockAt(x, y, z, game.blocks.dirt);
                     }
-                }
+                }*/
             }
         }
 
@@ -124,8 +126,9 @@ class Chunk{
     }
 
     setBlockAt(x,y,z, block){
-        if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 64) throw "blah";
-        this.blocks[(x * 16 + z) + (y * 64 * 16)] = block.id;
+        if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 64) return;
+        if (block == null) this.blocks[(x * 16 + z) + (y * 64 * 16)] = null;
+        else this.blocks[(x * 16 + z) + (y * 64 * 16)] = block.id;
     }
 
     getBlockAt(x,y,z){

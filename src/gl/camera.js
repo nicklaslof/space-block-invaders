@@ -37,12 +37,15 @@ class Camera{
     updateRotation(){
         this.currentRot = this.currentRot%(Math.PI*2);
         //if (this.currentRot < 0) this.currentRot = Math.PI*2;
-        quaternion.fromEuler(this.quaternion, 0, this.getRotationDeg(), 0);
+        quaternion.fromEuler(this.quaternion, this.getRotationXDeg(), this.getRotationDeg(), 0);
     }
 
     //Get the rotation in degrees instead of radians
     getRotationDeg(){
         return this.currentRot* (180/Math.PI);
+    }
+    getRotationXDeg(){
+        return this.currentRotX* (180/Math.PI);
     }
 
     getQuaternion(){
@@ -54,7 +57,6 @@ class Camera{
         this.position.x = position.x;
         this.position.y = position.y + 4;
         this.position.z = position.z;
-        console.log(this.position);
         this.updatePerspective();
         this.updateRotationTranslation();
     }
@@ -67,7 +69,10 @@ class Camera{
 
     //Return the camera direction as a vector using Sin and Cos to calculate the vector based on the camera rotation in radians.
     getDirection(){
-        return {x:Math.sin(this.currentRot),y:0,z:Math.cos(this.currentRot)};
+        //var r = {x:-this.perspectiveMatrix[8],y:-this.perspectiveMatrix[9],z:-this.perspectiveMatrix[10]};
+        //quaternion.getAxisAngle(r,this.quaternion);
+        //return r;
+        return {x:Math.sin(this.currentRot),y:-Math.sin(this.currentRotX),z:Math.cos(this.currentRot)};
     }
 
     //Update the perspectivematrix with the current rotation and position. Super important to rotate first and then move

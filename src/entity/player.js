@@ -34,6 +34,14 @@ class Player extends Entity{
         if (game.input.axes.x < 0) this.cross(this.strafe,cameraDirection,up);
         if (game.input.axes.x > 0) this.cross(this.strafe,cameraDirection,down);
 
+        
+
+        if (game.input.usePressed){
+            var block = game.world.rayPickBlock(game,this.pos.x,this.pos.y+4,this.pos.z,cameraDirection,15);
+             console.log(block);
+             if (block != null)game.world.setBlockAt(game,block.x,block.y, block.z, null);
+        }
+
         if (this.velocity.x !=0 || this.velocity.z != 0 || this.strafe.x != 0 || this.strafe.z !=0){
             //combine forward/backward movement with strafe movement and multiply that with the direction the camera is facing
             this.tempVector.x = cameraDirection.x * this.velocity.z + this.strafe.x;
