@@ -34,12 +34,13 @@ class Player extends Entity{
         if (game.input.axes.x < 0) this.cross(this.strafe,cameraDirection,up);
         if (game.input.axes.x > 0) this.cross(this.strafe,cameraDirection,down);
 
-        
-
-        if (game.input.usePressed){
-            var block = game.world.rayPickBlock(game,this.pos.x,this.pos.y+4,this.pos.z,cameraDirection,15);
-             console.log(block);
-             if (block != null)game.world.setBlockAt(game,block.x,block.y, block.z, null);
+        if (game.input.getLeftClicked()){
+            var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+4,this.pos.z+0.5,cameraDirection,15);
+            if (block != null) game.world.setBlockAt(game,block.x,block.y, block.z, null);
+        }
+        if (game.input.getRightClicked()){
+            var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+4,this.pos.z+0.5,cameraDirection,15);
+            if (block != null) game.world.setBlockAt(game,block.x,block.y+1, block.z, game.blocks.dirt);
         }
 
         if (this.velocity.x !=0 || this.velocity.z != 0 || this.strafe.x != 0 || this.strafe.z !=0){

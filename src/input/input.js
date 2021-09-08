@@ -4,6 +4,8 @@ class Input{
     constructor() {
         this.usePressedPreviously = false;
         document.addEventListener("mousemove", this.handleMouseMouseEvent.bind(this));
+        document.addEventListener("mousedown", this.handleMouseMouseDownEvent.bind(this));
+        document.addEventListener("mouseup", this.handleMouseMouseUpEvent.bind(this));
         this.mouseX = 0;
         this.mouseY = 0;
     }
@@ -11,6 +13,15 @@ class Input{
     handleMouseMouseEvent(e){
         this.mouseX = -e.movementX;
         this.mouseY = -e.movementY;
+    }
+
+    handleMouseMouseDownEvent(e){
+        this.leftClicked = e.button == 0;
+        this.rightClicked = e.button == 2;
+    }
+    handleMouseMouseUpEvent(e){
+        this.leftClicked != e.button == 0;
+        this.rightClicked != e.button == 2;
     }
 
     getMouseX(){
@@ -23,6 +34,18 @@ class Input{
         let m = this.mouseY;
         this.mouseY=0;
         return m;
+    }
+
+    getLeftClicked(){
+        let v = this.leftClicked;
+        this.leftClicked = false;
+        return v;
+    }
+
+    getRightClicked(){
+        let v = this.rightClicked;
+        this.rightClicked = false;
+        return v;
     }
 
     tick(game, deltaTime){

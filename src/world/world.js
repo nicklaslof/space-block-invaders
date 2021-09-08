@@ -14,7 +14,7 @@ class World{
             }
         }
 
-        this.entites.push(new Player(0,5,0));
+        this.entites.push(new Player(32,32,32));
     }
 
     tick(game, deltaTime){
@@ -57,35 +57,30 @@ class World{
         var localBlockPoxZ = z&15;
         console.log("Setting block at "+localBlockPosX+" "+Math.round(y)+" "+localBlockPoxZ);
         chunk.setBlockAt(localBlockPosX,Math.round(y),localBlockPoxZ,block);
-        chunk.recalculateMesh(game);
+        chunk.update(game);
     }
 
     rayPickBlock(game,x,y,z,direction,range){
-        console.log("direction "+direction.x+" "+direction.y+" "+direction.z);
-        //console.log(x+" "+y+" "+z);
         var rayPosition = {x:x,y:y,z:z};
         for (let i = 0; i < range; i++) {
             rayPosition.x -= direction.x/2;
             rayPosition.y -= direction.y/2;
             rayPosition.z -= direction.z/2;
-           // console.log(rayPosition);
+
             var chunk = this.getChunk(rayPosition.x,rayPosition.z);
             if (chunk == null) continue;
-           // console.log(chunk.worldPos);
             var localBlockPosX = rayPosition.x&15;
             var localBlockPoxZ = rayPosition.z&15;
-            //console.log("getting block at "+localBlockPosX+" "+Math.round(rayPosition.y)+" "+localBlockPoxZ);
+
             var blockId = chunk.getBlockAt(localBlockPosX,Math.round(rayPosition.y),localBlockPoxZ);
             var block = game.blocks.get(blockId);
             if (block == null) continue;
-            //console.log("found block "+blockId);
+
             var blockPos = {x:chunk.worldPos.x+localBlockPosX,y:Math.round(rayPosition.y),z:chunk.worldPos.z+localBlockPoxZ};
             var rayAABB = {minX:rayPosition.x-0.5,minY:rayPosition.y-0.5,minZ:rayPosition.z-0.5,maxX:rayPosition.x+0.5,maxY:rayPosition.y+0.5,maxZ:rayPosition.z+0.5};
-            //console.log(rayAABB);
+
             var intersects = block.intersects(blockPos,rayAABB);
             if (intersects) return blockPos;
-
-
         }
 
         return null;

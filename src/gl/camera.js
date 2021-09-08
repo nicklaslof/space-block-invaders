@@ -12,17 +12,19 @@ class Camera{
         this.updatePerspective();
         this.updateRotationTranslation();
         this.quaternion = quaternion.create();
-        this.yaw = 0;
     }
 
     //Increase the rotatation of the camera. Rotation is stored as radians
     rotate(rot){
+        quaternion.rotateY(this.quaternion, this.quaternion, rot);
         this.currentRot += rot;
         this.updateRotation();
+
     }
 
     //Increase the rotatation of the camera. Rotation is stored as radians
     rotateX(rot){
+        quaternion.rotateX(this.quaternion, this.quaternion, rot);
         this.currentRotX += rot;
         this.updateRotation();
     }
@@ -36,6 +38,7 @@ class Camera{
     //Update the rotation of the camera quaterantion.
     updateRotation(){
         this.currentRot = this.currentRot%(Math.PI*2);
+        this.currentRotX = this.currentRotX%(Math.PI*2);
         //if (this.currentRot < 0) this.currentRot = Math.PI*2;
         quaternion.fromEuler(this.quaternion, this.getRotationXDeg(), this.getRotationDeg(), 0);
     }
@@ -64,15 +67,12 @@ class Camera{
     //This shouldn't be needed but I couldn't get the rotation to work correctly if not reseting the perspectivematrix everytime
     //Just setting the position to zero should be enough but apparently not.
     updatePerspective(){
-        return matrix4.perspective(this.perspectiveMatrix,64 * Math.PI / 180,this.gl.canvas.clientWidth / this.gl.canvas.clientHeight,0.1,10000);
+        return matrix4.perspective(this.perspectiveMatrix,80 * Math.PI / 180,this.gl.canvas.clientWidth / this.gl.canvas.clientHeight,0.1,10000);
     }
 
     //Return the camera direction as a vector using Sin and Cos to calculate the vector based on the camera rotation in radians.
     getDirection(){
-        //var r = {x:-this.perspectiveMatrix[8],y:-this.perspectiveMatrix[9],z:-this.perspectiveMatrix[10]};
-        //quaternion.getAxisAngle(r,this.quaternion);
-        //return r;
-        return {x:Math.sin(this.currentRot),y:-Math.sin(this.currentRotX),z:Math.cos(this.currentRot)};
+        return {x:Math.sin(this.currentRot)*Math.cos(this.currentRotX),y:-Math.sin(this.currentRotX),z:Math.cos(this.currentRot)*Math.cos(this.currentRotX)};
     }
 
     //Update the perspectivematrix with the current rotation and position. Super important to rotate first and then move

@@ -5,16 +5,11 @@ class Chunk{
         this.chunkPos = {x:pos.x/16,z:pos.z/16};
         console.log("Creating chunk :"+pos.x+" "+pos.z+ "   "+this.chunkPos.x+"  "+this.chunkPos.z);
 
-
         this.blocks = [];
         this.lightMap = [];
 
-     
         this.buildChunkWorld(game, noise, noise2);
-
-        this.fillSunlight();
-
-        this.recalculateMesh(game);
+        this.update(game);
 
     }
 
@@ -22,7 +17,7 @@ class Chunk{
 
         for (let x = 0; x < 16; x++) {
             for (let z = 0; z < 16; z++) {
-                for (let y = 64; y > 0; y--) {
+                for (let y = 0; y < 64; y++) {
                     this.setLightAt(x,y,z,0.7);
                 }
             }
@@ -40,6 +35,7 @@ class Chunk{
     }
 
     recalculateMesh(game) {
+        this.mesh = null;
         var m = MeshBuilder.start(game.gl, this.worldPos.x, 0, this.worldPos.z);
 
         for (let x = 0; x < 16; x++) {
@@ -78,9 +74,9 @@ class Chunk{
 
             for (let z = 0; z < 16; z++) {
                 for (let y = 0; y < 64; y++) {
-                    if (y == 0) this.setBlockAt(x, y, z, game.blocks.dirt);
-                }
-                /*    if (y < 20){
+                    //if (y == 0) this.setBlockAt(x, y, z, game.blocks.dirt);
+                
+                    if (y < 20){
                         this.setBlockAt(x, y, z, game.blocks.dirt);
                         continue;
                     }
@@ -101,7 +97,7 @@ class Chunk{
                     if ((n+n2) * 32 > y) {
                         this.setBlockAt(x, y, z, game.blocks.dirt);
                     }
-                }*/
+                }
             }
         }
 
@@ -125,6 +121,10 @@ class Chunk{
         this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,0);
     }
 
+    update(game){
+        this.fillSunlight();
+        this.recalculateMesh(game);
+    }
     setBlockAt(x,y,z, block){
         if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 64) return;
         if (block == null) this.blocks[(x * 16 + z) + (y * 64 * 16)] = null;
