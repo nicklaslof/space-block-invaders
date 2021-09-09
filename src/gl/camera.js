@@ -58,7 +58,7 @@ class Camera{
     //Set the position of the camera and recalculate rotation and position
     setPos(position){
         this.position.x = position.x;
-        this.position.y = position.y+1.6;
+        this.position.y = position.y+1.4;
         this.position.z = position.z;
         this.updatePerspective();
         this.updateRotationTranslation();

@@ -1,6 +1,6 @@
 import MeshBuilder from "../gl/meshbuilder.js";
 class Chunk{
-    constructor(game, pos,noise,noise2) {
+    constructor(game, pos,noise,noise2,noise3) {
         this.worldPos = pos;
         this.chunkPos = {x:pos.x/16,z:pos.z/16};
         console.log("Creating chunk :"+pos.x+" "+pos.z+ "   "+this.chunkPos.x+"  "+this.chunkPos.z);
@@ -8,7 +8,7 @@ class Chunk{
         this.blocks = [];
         this.lightMap = [];
 
-        this.buildChunkWorld(game, noise, noise2);
+        this.buildChunkWorld(game, noise, noise2,noise3);
         this.update(game);
 
     }
@@ -69,38 +69,41 @@ class Chunk{
         this.mesh.cleanUp();
     }
 
-    buildChunkWorld(game, noise, noise2) {
+    buildChunkWorld(game, noise, noise2, noise3) {
         for (let x = 0; x < 16; x++) {
 
             for (let z = 0; z < 16; z++) {
                 for (let y = 0; y < 64; y++) {
-                    if (y == 0) this.setBlockAt(x, y, z, game.blocks.dirt);
-                    if (y == 1 && z == 3) this.setBlockAt(x, y, z, game.blocks.dirt);
-                    if (y == 2 && z == 3) this.setBlockAt(x, y, z, game.blocks.dirt);
-                   /* if (y < 20){
+                    //if (y == 0) this.setBlockAt(x, y, z, game.blocks.dirt);
+                   // if (y == 1 && z == 3) this.setBlockAt(x, y, z, game.blocks.dirt);
+                   // if (y == 2 && z == 3) this.setBlockAt(x, y, z, game.blocks.dirt);
+                   if (y < 20){
                         this.setBlockAt(x, y, z, game.blocks.dirt);
                         continue;
                     }
                         
-                    var n = noise.noise((this.worldPos.x + x) * 0.006, (this.worldPos.z + z) * 0.006) / 5;
-                    var n2 = noise2.noise((this.worldPos.x + x) * 0.001, (this.worldPos.z + z) * 0.001) / 4;
-                    var n3 = noise2.noise((this.worldPos.x + x) * 0.0003, (this.worldPos.z + z) * 0.0003) / 3;
-                    var n4 = noise.noise3d((this.worldPos.x + x) * 0.003, y * 0.03, (this.worldPos.z + z) * 0.003);
-                    var n5 = noise2.noise3d((this.worldPos.x + x) * 0.005, y * 0.01, (this.worldPos.z + z) * 0.005);
-                    var nf = n * n2 / n3;
-                    nf += 9;
+                    var n = noise.noise((this.worldPos.x + x) * 0.0001, (this.worldPos.z + z) * 0.0001);
+                    var n2 = noise2.noise((this.worldPos.x + x) * 0.0001, (this.worldPos.z + z) * 0.0001);
+                    var n3 = noise3.noise((this.worldPos.x + x) * 0.01, (this.worldPos.z + z) * 0.01)+20;
+                    var n4 = noise3.noise3d((this.worldPos.x + x) * 0.01, y*0.01, (this.worldPos.z + z) * 0.01)*20;
+                    //var n4 = noise.noise3d((this.worldPos.x + x) * 0.003, y * 0.03, (this.worldPos.z + z) * 0.003);
+                    //var n5 = noise2.noise3d((this.worldPos.x + x) * 0.01, y * 0.01, (this.worldPos.z + z) * 0.01);
+                    var nf = (n + n2 +n3 + n4);
+                    //nf += 9;
                     //if (n4 * 32 > y) nf -= n4/2;
-                    if (nf * 4 > y && n4 + n5 < 0.2) {
+                    if (nf > y) {
                         this.setBlockAt(x, y, z, game.blocks.dirt);
                     }
 
                     n = noise2.noise((this.worldPos.x + x) * 0.005, (this.worldPos.z + z) * 0.005);
                     n2 = noise.noise((this.worldPos.x + x) * 0.005, (this.worldPos.z + z) * 0.005);
-                    n4 = noise.noise3d((this.worldPos.x + x) * 0.05, y * 0.04, (this.worldPos.z + z) * 0.05);
-                    n5 = noise2.noise3d((this.worldPos.x + x) * 0.05, y * 0.004, (this.worldPos.z + z) * 0.05);
-                    if ((n+n2) * 64 > y && n5 < 0.1 && n4 < 0.9) {
+                    var n4 = noise.noise3d((this.worldPos.x + x) * 0.05, y * 0.04, (this.worldPos.z + z) * 0.05);
+                    var n5 = noise2.noise3d((this.worldPos.x + x) * 0.01, y * 0.004, (this.worldPos.z + z) * 0.01);
+                    if ((n+n2) * 64 > y) {
                         this.setBlockAt(x, y, z, game.blocks.limestone);
-                    }*/
+                        if (n5 > 0.2 || n4 > 0.2)this.setBlockAt(x, y, z, null);
+                    }
+                    
                 }
             }
         }

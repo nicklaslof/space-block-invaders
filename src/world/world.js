@@ -7,14 +7,15 @@ class World{
         this.entites = [];
         this.noise = new SimplexNoise();
         this.noise2 = new SimplexNoise();
+        this.noise3 = new SimplexNoise();
 
         for (let x = 0; x < sizeX*16; x+=16) {
             for (let z = 0; z < sizeZ*16; z+=16) {
-                this.chunks.push(new Chunk(game, {x:x,z:z},this.noise,this.noise2));       
+                this.chunks.push(new Chunk(game, {x:x,z:z},this.noise,this.noise2,this.noise3));       
             }
         }
 
-        this.entites.push(new Player(0,4,0));
+        this.entites.push(new Player(64,64,64));
     }
 
     tick(game, deltaTime){
