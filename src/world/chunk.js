@@ -74,29 +74,33 @@ class Chunk{
 
             for (let z = 0; z < 16; z++) {
                 for (let y = 0; y < 64; y++) {
-                    //if (y == 0) this.setBlockAt(x, y, z, game.blocks.dirt);
-                
-                    if (y < 20){
+                    if (y == 0) this.setBlockAt(x, y, z, game.blocks.dirt);
+                    if (y == 1 && z == 3) this.setBlockAt(x, y, z, game.blocks.dirt);
+                    if (y == 2 && z == 3) this.setBlockAt(x, y, z, game.blocks.dirt);
+                   /* if (y < 20){
                         this.setBlockAt(x, y, z, game.blocks.dirt);
                         continue;
                     }
                         
                     var n = noise.noise((this.worldPos.x + x) * 0.006, (this.worldPos.z + z) * 0.006) / 5;
-                    var n2 = noise2.noise((this.worldPos.x + x) * 0.01, (this.worldPos.z + z) * 0.01) / 5;
-                    var n3 = noise2.noise((this.worldPos.x + x) * 0.0003, (this.worldPos.z + z) * 0.0003) / 5;
-                    var n4 = noise.noise3d((this.worldPos.x + x) * 0.03, y * 0.03, (this.worldPos.z + z) * 0.03);
-                    var n5 = noise2.noise3d((this.worldPos.x + x) * 0.05, y * 0.01, (this.worldPos.z + z) * 0.05);
+                    var n2 = noise2.noise((this.worldPos.x + x) * 0.001, (this.worldPos.z + z) * 0.001) / 4;
+                    var n3 = noise2.noise((this.worldPos.x + x) * 0.0003, (this.worldPos.z + z) * 0.0003) / 3;
+                    var n4 = noise.noise3d((this.worldPos.x + x) * 0.003, y * 0.03, (this.worldPos.z + z) * 0.003);
+                    var n5 = noise2.noise3d((this.worldPos.x + x) * 0.005, y * 0.01, (this.worldPos.z + z) * 0.005);
                     var nf = n * n2 / n3;
+                    nf += 9;
                     //if (n4 * 32 > y) nf -= n4/2;
-                    if (nf * 64 > y && n4 + n5 < 0.8) {
-                        this.setBlockAt(x, y, z, game.blocks.limestone);
-                    }
-
-                    n = noise2.noise((this.worldPos.x + x) * 0.008, (this.worldPos.z + z) * 0.008)*2;
-                    n2 = noise.noise((this.worldPos.x + x) * 0.005, (this.worldPos.z + z) * 0.005)*5;
-                    if ((n+n2) * 32 > y) {
+                    if (nf * 4 > y && n4 + n5 < 0.2) {
                         this.setBlockAt(x, y, z, game.blocks.dirt);
                     }
+
+                    n = noise2.noise((this.worldPos.x + x) * 0.005, (this.worldPos.z + z) * 0.005);
+                    n2 = noise.noise((this.worldPos.x + x) * 0.005, (this.worldPos.z + z) * 0.005);
+                    n4 = noise.noise3d((this.worldPos.x + x) * 0.05, y * 0.04, (this.worldPos.z + z) * 0.05);
+                    n5 = noise2.noise3d((this.worldPos.x + x) * 0.05, y * 0.004, (this.worldPos.z + z) * 0.05);
+                    if ((n+n2) * 64 > y && n5 < 0.1 && n4 < 0.9) {
+                        this.setBlockAt(x, y, z, game.blocks.limestone);
+                    }*/
                 }
             }
         }

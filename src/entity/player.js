@@ -7,9 +7,10 @@ class Player extends Entity{
         super(xPos,yPos,zPos);
         this.velocity = {x:0,z:0};
         this.strafe = {x:0,z:0};
-        this.tempVector = {x:0,z:0};
+        this.tempVector = {x:0,y:0,z:0};
         this.jump = false;
         this.jumpCounter = 0;
+        this.timeFallen = 0;
     }
 
     tick (game, deltaTime){
@@ -17,12 +18,19 @@ class Player extends Entity{
         this.velocity.z = 0;
         this.strafe.x = 0;
         this.strafe.z = 0;
-    
+        //console.log(this.pos.y);
         if (this.jump){
-            this.jumpAngle += deltaTime*8;
+            this.jumpAngle += deltaTime*9;
             var j = Math.sin(this.jumpAngle);
-            this.pos.y += j/7;
-            if (this.jumpAngle >= (Math.PI*2)-1.5) this.jump = false;
+
+            this.tempVector.y = this.pos.y += j/8;
+
+            var b = this.canMove(game,this.pos.x,this.tempVector.y,this.pos.z);
+
+            if (b == null) this.pos.y += this.tempVector.y - this.pos.y;
+            else this.pos.y = b.y;
+
+            if (this.jumpAngle >= (Math.PI*2)) this.jump = false;
         }
 
         game.camera.rotate((game.input.getMouseX()/9) * deltaTime);
@@ -35,11 +43,11 @@ class Player extends Entity{
         if (game.input.axes.x > 0) this.cross(this.strafe,cameraDirection,down);
 
         if (game.input.getLeftClicked()){
-            var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+4,this.pos.z+0.5,cameraDirection,15);
+            var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+2,this.pos.z+0.5,cameraDirection,6);
             if (block != null) game.world.setBlockAt(game,block.x,block.y, block.z, null);
         }
         if (game.input.getRightClicked()){
-            var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+4,this.pos.z+0.5,cameraDirection,15);
+            var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+2,this.pos.z+0.5,cameraDirection,6);
             if (block != null) game.world.setBlockAt(game,block.x,block.y+1, block.z, game.blocks.dirt);
         }
 
@@ -61,18 +69,26 @@ class Player extends Entity{
 
             //check if the player can move in X or Z direction separetly to allow sliding on the walls. Otherwise the player would get stuck when close to a wall
             //which would be very annoying. If the player can move to the new position then transform the current position to that position.
-            if (this.canMove(game,this.tempVector.x,this.pos.y, this.pos.z)) this.pos.x += this.tempVector.x-this.pos.x;
-            if (this.canMove(game,this.pos.x,this.pos.y,this.tempVector.z)) this.pos.z += this.tempVector.z-this.pos.z;
+            if (this.canMove(game,this.tempVector.x,this.pos.y, this.pos.z)==null) this.pos.x += this.tempVector.x-this.pos.x;
+            if (this.canMove(game,this.pos.x,this.pos.y,this.tempVector.z)==null) this.pos.z += this.tempVector.z-this.pos.z;
         }
-        this.tempVector.y = this.pos.y - (deltaTime*15);
-        if (!this.onGround(game,this.tempVector.y) && !this.jump){
+        var increasedFallSpeed = (this.timeFallen*4)+1;
+        this.tempVector.y = this.pos.y - (deltaTime*(10*increasedFallSpeed));
+        var groundBlock = this.onGround(game,this.tempVector.y);
+        if (!groundBlock && !this.jump){
             this.pos.y += this.tempVector.y-this.pos.y;
-        } else{
+            this.timeFallen += deltaTime;
+        }else{
+            if (!this.jump){
+                this.timeFallen = 0;
+                this.pos.y = groundBlock.y;
+            }
             if(game.input.firePressed && !this.jump){
                 this.jumpAngle = 0;
                 this.jump = true;
             }
         }
+        
 
         game.camera.setPos(this.pos);
     }

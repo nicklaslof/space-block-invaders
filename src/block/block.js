@@ -10,7 +10,12 @@ class Block{
     }
 
     intersects(blockPos,checkAABB){
-        var blockAABB = {minX:blockPos.x-0.5,minY:blockPos.y-0.5,minZ:blockPos.z-0.5,maxX:blockPos.x+0.5,maxY:blockPos.y+0.5,maxZ:blockPos.z+0.5};
+        var blockAABB = {minX:blockPos.x-0.5,minY:blockPos.y,minZ:blockPos.z-0.5,maxX:blockPos.x+0.5,maxY:blockPos.y+1,maxZ:blockPos.z+0.5};
+       // console.log(blockAABB);
+       // console.log(checkAABB);
+       // console.log(checkAABB.minY <= blockAABB.maxY && checkAABB.maxY >= blockAABB.minY);
+       // if (checkAABB.minY <= blockAABB.maxY && checkAABB.maxY >= blockAABB.minY) return true;
+       
         return (checkAABB.minX <= blockAABB.maxX && checkAABB.maxX >= blockAABB.minX) &&
          (checkAABB.minY <= blockAABB.maxY && checkAABB.maxY >= blockAABB.minY) &&
          (checkAABB.minZ <= blockAABB.maxZ && checkAABB.maxZ >= blockAABB.minZ);

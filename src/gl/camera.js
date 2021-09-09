@@ -58,7 +58,7 @@ class Camera{
     //Set the position of the camera and recalculate rotation and position
     setPos(position){
         this.position.x = position.x;
-        this.position.y = position.y + 4;
+        this.position.y = position.y+1.6;
         this.position.z = position.z;
         this.updatePerspective();
         this.updateRotationTranslation();
@@ -67,7 +67,7 @@ class Camera{
     //This shouldn't be needed but I couldn't get the rotation to work correctly if not reseting the perspectivematrix everytime
     //Just setting the position to zero should be enough but apparently not.
     updatePerspective(){
-        return matrix4.perspective(this.perspectiveMatrix,80 * Math.PI / 180,this.gl.canvas.clientWidth / this.gl.canvas.clientHeight,0.1,10000);
+        return matrix4.perspective(this.perspectiveMatrix,70 * Math.PI / 180,this.gl.canvas.clientWidth / this.gl.canvas.clientHeight,0.1,10000);
     }
 
     //Return the camera direction as a vector using Sin and Cos to calculate the vector based on the camera rotation in radians.
