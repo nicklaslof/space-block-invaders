@@ -43,12 +43,13 @@ class Player extends Entity{
         if (game.input.axes.x > 0) this.cross(this.strafe,cameraDirection,down);
 
         if (game.input.getLeftClicked()){
-            var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+2,this.pos.z+0.5,cameraDirection,6);
+            var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+1.6,this.pos.z+0.5,cameraDirection,6);
             if (block != null) game.world.setBlockAt(game,block.x,block.y, block.z, null);
         }
         if (game.input.getRightClicked()){
             var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+2,this.pos.z+0.5,cameraDirection,6);
-            if (block != null) game.world.setBlockAt(game,block.x,block.y+1, block.z, game.blocks.dirt);
+            var direction = {x:Math.round(cameraDirection.x),y:Math.round(cameraDirection.y),z:Math.round(cameraDirection.z)};
+            if (block != null) game.world.setBlockAt(game,block.x+direction.x,block.y+direction.y, block.z+direction.z, game.blocks.dirt);
         }
 
         if (this.velocity.x !=0 || this.velocity.z != 0 || this.strafe.x != 0 || this.strafe.z !=0){
@@ -69,8 +70,8 @@ class Player extends Entity{
 
             //check if the player can move in X or Z direction separetly to allow sliding on the walls. Otherwise the player would get stuck when close to a wall
             //which would be very annoying. If the player can move to the new position then transform the current position to that position.
-            if (this.canMove(game,this.tempVector.x,this.pos.y, this.pos.z)==null) this.pos.x += this.tempVector.x-this.pos.x;
-            if (this.canMove(game,this.pos.x,this.pos.y,this.tempVector.z)==null) this.pos.z += this.tempVector.z-this.pos.z;
+            if (this.canMove(game,this.tempVector.x,this.pos.y, this.pos.z)==null && this.canMove(game,this.tempVector.x,this.pos.y+1, this.pos.z)==null) this.pos.x += this.tempVector.x-this.pos.x;
+            if (this.canMove(game,this.pos.x,this.pos.y,this.tempVector.z)==null && this.canMove(game,this.pos.x,this.pos.y+1,this.tempVector.z)==null) this.pos.z += this.tempVector.z-this.pos.z;
         }
         var increasedFallSpeed = (this.timeFallen*4)+1;
         this.tempVector.y = this.pos.y - (deltaTime*(10*increasedFallSpeed));
