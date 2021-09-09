@@ -11,7 +11,24 @@ class World{
 
         for (let x = 0; x < sizeX*16; x+=16) {
             for (let z = 0; z < sizeZ*16; z+=16) {
-                this.chunks.push(new Chunk(game, {x:x,z:z},this.noise,this.noise2,this.noise3));       
+                var chunk = new Chunk(game, {x:x,z:z},this.noise,this.noise2,this.noise3);
+                this.chunks.push(chunk);
+                chunk.update(game);       
+            }
+        }
+
+        for (let x = 0; x < (sizeX-1)*16; x+=16) {
+            for (let z = 0; z < (sizeZ-1)*16; z+=16) {
+                var chunk = this.getChunk(x,z);
+                chunk.buildDecoration(game,this,this.noise,this.noise2,this.noise3);
+                    
+            }
+        }
+
+        for (let x = 0; x < (sizeX-1)*16; x+=16) {
+            for (let z = 0; z < (sizeZ-1)*16; z+=16) {
+                var chunk = this.getChunk(x,z);
+                chunk.update(game);  
             }
         }
 
@@ -50,15 +67,15 @@ class World{
         return chunk;
     }
 
-    setBlockAt(game, x,y,z,block){
-        console.log("Trying setting block at "+x+" "+Math.round(y)+" "+z);
+    setBlockAt(game, x,y,z,block,update=true){
+        //console.log("Trying setting block at "+x+" "+Math.round(y)+" "+z);
         var chunk = this.getChunk(x,z);
         if (chunk == null) return false;
         var localBlockPosX = x&15;
         var localBlockPoxZ = z&15;
-        console.log("Setting block at "+localBlockPosX+" "+Math.round(y)+" "+localBlockPoxZ);
+        //console.log("Setting block at "+localBlockPosX+" "+Math.round(y)+" "+localBlockPoxZ);
         chunk.setBlockAt(localBlockPosX,Math.round(y),localBlockPoxZ,block);
-        chunk.update(game);
+        if (update)chunk.update(game);
     }
 
     rayPickBlock(game,x,y,z,direction,range){

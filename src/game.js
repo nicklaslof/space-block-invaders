@@ -32,7 +32,7 @@ class Game{
         this.meshBuilder = new MeshBuilder();
         
         this.blocks = new Blocks(this);
-        this.world = new World(this, 8,8);
+        this.world = new World(this, 16,16);
        
         this.last = performance.now();
         this.counter = 0;

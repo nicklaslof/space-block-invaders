@@ -9,7 +9,7 @@ class Chunk{
         this.lightMap = [];
 
         this.buildChunkWorld(game, noise, noise2,noise3);
-        this.update(game);
+
 
     }
 
@@ -48,13 +48,13 @@ class Chunk{
                         if (this.getBlockAt(x, y + 1, z) == undefined)
                             MeshBuilder.top(block.topTexture.getUVs(), m, x, y, z, this.getLightAt(x,y+1,z), block.topColor);
                         if (this.getBlockAt(x - 1, y, z) == undefined)
-                            MeshBuilder.left(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x-1,y,z), 1, block.sideColor);
+                            MeshBuilder.left(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x-1,y,z)-0.05, 1, block.sideColor);
                         if (this.getBlockAt(x + 1, y, z) == undefined)
-                            MeshBuilder.right(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x+1,y,z), 1, block.sideColor);
+                            MeshBuilder.right(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x+1,y,z)-0.1, 1, block.sideColor);
                         if (this.getBlockAt(x, y, z + 1) == undefined)
-                            MeshBuilder.front(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y,z+1), 1, block.sideColor);
+                            MeshBuilder.front(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y,z+1)-0.15, 1, block.sideColor);
                         if (this.getBlockAt(x, y, z - 1) == undefined)
-                            MeshBuilder.back(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y,z-1), 1, block.sideColor);
+                            MeshBuilder.back(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y,z-1)-0.2, 1, block.sideColor);
                         if (this.getBlockAt(x, y - 1, z) == undefined)
                             MeshBuilder.bottom(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y-1,z), block.sideColor);
                     }
@@ -67,6 +67,45 @@ class Chunk{
         this.mesh.setPos(this.worldPos.x, 0, this.worldPos.z);
         this.mesh.updateMesh();
         this.mesh.cleanUp();
+    }
+
+    buildDecoration(game,world,noise1,noise2,noise3){
+        for (let x = 0; x < 16; x++) {
+
+            for (let z = 0; z < 16; z++) {
+                for (let y = 64; y > 0; y--) {
+                    if (this.getBlockAt(x,y,z) == "g"){
+                        var treeNoise = noise2.noise((this.worldPos.x + x) * 0.1, (this.worldPos.z + z) * 0.1);
+                        if (treeNoise < 0.8 && treeNoise > 0.76){
+                            this.generateTree(game,world, this.worldPos.x+x,y,this.worldPos.z+z,treeNoise);
+                        }
+                    }
+                   
+                }
+            }
+        }
+    }
+
+    generateTree(game,world,x,y,z, treeNoise){
+        var height = (treeNoise * 100)-70;
+        for (let trunk = y; trunk < y+height; trunk++) {
+            world.setBlockAt(game,x,trunk,z,game.blocks.wood,false);
+        }
+
+        var treeY = 0;
+        for (let bodyY = y+4;bodyY < y+height+1; bodyY++){
+            treeY++;
+            for (let bodyX = x - Math.max(1,(6-treeY)); bodyX < x+Math.max(1,(6-treeY)); bodyX++){
+                for (let bodyZ = z -Math.max(1,(6-treeY)); bodyZ < z+Math.max(1,(6-treeY)); bodyZ++){
+                    if (this.getBlockAt(bodyX,bodyY,bodyZ) == undefined && Math.random()>0.3){
+                        world.setBlockAt(game,bodyX,bodyY,bodyZ,game.blocks.leaves,false);
+                    }
+                }
+            }
+            
+
+        }
+
     }
 
     buildChunkWorld(game, noise, noise2, noise3) {

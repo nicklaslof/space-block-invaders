@@ -1,6 +1,8 @@
 import Dirt from "./dirt.js";
 import Grass from "./grass.js";
+import Leaves from "./leaves.js";
 import Limestone from "./limestone.js";
+import Wood from "./wood.js";
 
 class Blocks{
     constructor(game) {
@@ -8,6 +10,8 @@ class Blocks{
         this.dirt = this.registerBlock(new Dirt(game));
         this.grass = this.registerBlock(new Grass(game));
         this.limestone = this.registerBlock(new Limestone(game));
+        this.wood = this.registerBlock(new Wood(game));
+        this.leaves = this.registerBlock(new Leaves(game));
     }
 
     registerBlock(block){
