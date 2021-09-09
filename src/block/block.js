@@ -20,5 +20,13 @@ class Block{
          (checkAABB.minY <= blockAABB.maxY && checkAABB.maxY >= blockAABB.minY) &&
          (checkAABB.minZ <= blockAABB.maxZ && checkAABB.maxZ >= blockAABB.minZ);
     }
+
+    getTopColor(x,y,z){
+        return this.topColor;
+    }
+
+    getSideColor(x,y,z){
+        return this.sideColor;
+    }
 }
 export default Block;

@@ -46,17 +46,17 @@ class Chunk{
                     if (blockId != undefined) {
                         var block = game.blocks.get(blockId);
                         if (this.getBlockAt(x, y + 1, z) == undefined)
-                            MeshBuilder.top(block.topTexture.getUVs(), m, x, y, z, this.getLightAt(x,y+1,z), block.topColor);
+                            MeshBuilder.top(block.topTexture.getUVs(), m, x, y, z, this.getLightAt(x,y+1,z), block.getSideColor(x,y,z));
                         if (this.getBlockAt(x - 1, y, z) == undefined)
-                            MeshBuilder.left(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x-1,y,z)-0.05, 1, block.sideColor);
+                            MeshBuilder.left(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x-1,y,z)-0.05, 1, block.getSideColor(x,y,z));
                         if (this.getBlockAt(x + 1, y, z) == undefined)
-                            MeshBuilder.right(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x+1,y,z)-0.1, 1, block.sideColor);
+                            MeshBuilder.right(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x+1,y,z)-0.1, 1, block.getSideColor(x,y,z));
                         if (this.getBlockAt(x, y, z + 1) == undefined)
-                            MeshBuilder.front(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y,z+1)-0.15, 1, block.sideColor);
+                            MeshBuilder.front(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y,z+1)-0.15, 1, block.getSideColor(x,y,z));
                         if (this.getBlockAt(x, y, z - 1) == undefined)
-                            MeshBuilder.back(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y,z-1)-0.2, 1, block.sideColor);
+                            MeshBuilder.back(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y,z-1)-0.2, 1, block.getSideColor(x,y,z));
                         if (this.getBlockAt(x, y - 1, z) == undefined)
-                            MeshBuilder.bottom(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y-1,z), block.sideColor);
+                            MeshBuilder.bottom(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y-1,z), block.getSideColor(x,y,z));
                     }
                 }
             }
@@ -102,10 +102,7 @@ class Chunk{
                     }
                 }
             }
-            
-
         }
-
     }
 
     buildChunkWorld(game, noise, noise2, noise3) {
