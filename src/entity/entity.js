@@ -19,7 +19,7 @@ class Entity {
         this.interpolatedPos.y = this.previousPosition.y + (this.pos.y - this.previousPosition.y) * interpolationOffset;
         this.interpolatedPos.z = this.previousPosition.z + (this.pos.z - this.previousPosition.z) * interpolationOffset;
 
-        
+    
 
         game.camera.setPos(this.interpolatedPos);
 

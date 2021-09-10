@@ -75,7 +75,8 @@ class Player extends Entity{
             if (this.canMove(game,this.pos.x,this.pos.y,this.tempVector.z)==null && this.canMove(game,this.pos.x,this.pos.y+1,this.tempVector.z)==null) this.pos.z += this.tempVector.z-this.pos.z;
         }
         var increasedFallSpeed = (this.timeFallen)+1;
-        this.tempVector.y = this.pos.y - (increasedFallSpeed/60);
+        if (this.timeFallen >0) console.log(this.timeFallen);
+        this.tempVector.y = this.pos.y - (Math.min(increasedFallSpeed,40)/60);
         var groundBlock = this.onGround(game,this.tempVector.y);
         if (!groundBlock && !this.jump){
             this.pos.y += this.tempVector.y-this.pos.y;
@@ -92,11 +93,11 @@ class Player extends Entity{
         }
         
 
-        game.camera.setPos(this.pos);
+
     }
 
     render(game,interpolationOffset){
-        
+        super.render(game,interpolationOffset);
     }
 
     
