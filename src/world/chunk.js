@@ -18,7 +18,7 @@ class Chunk{
         for (let x = 0; x < 16; x++) {
             for (let z = 0; z < 16; z++) {
                 for (let y = 0; y < 64; y++) {
-                    this.setLightAt(x,y,z,0.7);
+                    this.setLightAt(x,y,z,0.4);
                 }
             }
         }
@@ -34,29 +34,31 @@ class Chunk{
         }
     }
 
-    recalculateMesh(game) {
+    recalculateMesh(game,world) {
         this.mesh = null;
         var m = MeshBuilder.start(game.gl, this.worldPos.x, 0, this.worldPos.z);
-
+        var worldPosBlock = {x:0,z:0};
         for (let x = 0; x < 16; x++) {
 
             for (let z = 0; z < 16; z++) {
                 for (let y = 0; y < 64; y++) {
+                    worldPosBlock.x = x + this.worldPos.x;
+                    worldPosBlock.z = z + this.worldPos.z;
                     var blockId = this.getBlockAt(x, y, z);
                     if (blockId != undefined) {
                         var block = game.blocks.get(blockId);
-                        if (this.getBlockAt(x, y + 1, z) == undefined)
-                            MeshBuilder.top(block.topTexture.getUVs(), m, x, y, z, this.getLightAt(x,y+1,z), block.getSideColor(x,y,z));
-                        if (this.getBlockAt(x - 1, y, z) == undefined)
-                            MeshBuilder.left(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x-1,y,z)-0.05, 1, block.getSideColor(x,y,z));
-                        if (this.getBlockAt(x + 1, y, z) == undefined)
-                            MeshBuilder.right(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x+1,y,z)-0.1, 1, block.getSideColor(x,y,z));
-                        if (this.getBlockAt(x, y, z + 1) == undefined)
-                            MeshBuilder.front(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y,z+1)-0.15, 1, block.getSideColor(x,y,z));
-                        if (this.getBlockAt(x, y, z - 1) == undefined)
-                            MeshBuilder.back(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y,z-1)-0.2, 1, block.getSideColor(x,y,z));
-                        if (this.getBlockAt(x, y - 1, z) == undefined)
-                            MeshBuilder.bottom(block.sideTexture.getUVs(), m, x, y, z, this.getLightAt(x,y-1,z), block.getSideColor(x,y,z));
+                        if (world.getBlockAt(worldPosBlock.x, y + 1, worldPosBlock.z) == undefined)
+                            MeshBuilder.top(block.topTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x,y+1,worldPosBlock.z), block.getSideColor(x,y,z));
+                        if (world.getBlockAt(worldPosBlock.x - 1, y, worldPosBlock.z) == undefined)
+                            MeshBuilder.left(block.sideTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x-1,y,worldPosBlock.z)-0.05, 1, block.getSideColor(x,y,z));
+                        if (world.getBlockAt(worldPosBlock.x + 1, y, worldPosBlock.z) == undefined)
+                            MeshBuilder.right(block.sideTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x+1,y,worldPosBlock.z)-0.1, 1, block.getSideColor(x,y,z));
+                        if (world.getBlockAt(worldPosBlock.x, y, worldPosBlock.z + 1) == undefined)
+                            MeshBuilder.front(block.sideTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x,y,worldPosBlock.z+1)-0.15, 1, block.getSideColor(x,y,z));
+                        if (world.getBlockAt(worldPosBlock.x, y, worldPosBlock.z - 1) == undefined)
+                            MeshBuilder.back(block.sideTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x,y,worldPosBlock.z-1)-0.2, 1, block.getSideColor(x,y,z));
+                        if (world.getBlockAt(worldPosBlock.x, y - 1, worldPosBlock.z) == undefined)
+                            MeshBuilder.bottom(block.sideTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x,y-1,worldPosBlock.z), block.getSideColor(x,y,z));
                     }
                 }
             }
@@ -133,11 +135,14 @@ class Chunk{
 
                     n = noise2.noise((this.worldPos.x + x) * 0.005, (this.worldPos.z + z) * 0.005);
                     n2 = noise.noise((this.worldPos.x + x) * 0.005, (this.worldPos.z + z) * 0.005);
-                    var n4 = noise.noise3d((this.worldPos.x + x) * 0.05, y * 0.04, (this.worldPos.z + z) * 0.05);
+                    //var n4 = noise.noise3d((this.worldPos.x + x) * 0.05, y * 0.04, (this.worldPos.z + z) * 0.05);
                     var n5 = noise2.noise3d((this.worldPos.x + x) * 0.01, y * 0.004, (this.worldPos.z + z) * 0.01);
-                    if ((n+n2) * 64 > y) {
+                    var n6 = noise2.noise3d((this.worldPos.x + x) * 0.01, y * 0.04, (this.worldPos.z + z) * 0.01);
+                    n6 *=y;
+                    if (n6> 30) this.setBlockAt(x, y, z, game.blocks.limestone);
+                    if ((n+n2+n5) * 32 > y) {
                         this.setBlockAt(x, y, z, game.blocks.limestone);
-                        if (n5 > 0.2 || n4 > 0.2)this.setBlockAt(x, y, z, null);
+                        //if (n5 > 0.2 || n4 > 0.2)this.setBlockAt(x, y, z, null);
                     }
                     
                 }
@@ -164,9 +169,9 @@ class Chunk{
         this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,0);
     }
 
-    update(game){
+    update(game,world){
         this.fillSunlight();
-        this.recalculateMesh(game);
+        this.recalculateMesh(game,world);
     }
     setBlockAt(x,y,z, block){
         if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 64) return;
@@ -185,7 +190,7 @@ class Chunk{
     }
 
     getLightAt(x,y,z){
-        if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 64) return 1;
+        if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 64) return 0;
         return this.lightMap[(x * 16 + z) + (y * 64 * 16)]; 
     }
 }

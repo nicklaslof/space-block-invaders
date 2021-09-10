@@ -3,6 +3,8 @@ import Chunk from "./chunk.js";
 
 class World{
     constructor(game, sizeX, sizeZ) {
+        this.sizeX = sizeX;
+        this.sizeZ = sizeZ;
         this.chunks = [];
         this.entites = [];
         this.noise = new SimplexNoise();
@@ -12,27 +14,23 @@ class World{
         for (let x = 0; x < sizeX*16; x+=16) {
             for (let z = 0; z < sizeZ*16; z+=16) {
                 var chunk = new Chunk(game, {x:x,z:z},this.noise,this.noise2,this.noise3);
-                this.chunks.push(chunk);
-                chunk.update(game);       
+                console.log("added chunk "+x+ " "+z+" at "+ (x + (z*sizeX)));
+                this.chunks[x/16 + ((z/16)*sizeX)]=chunk;     
             }
         }
 
-        for (let x = 0; x < (sizeX-1)*16; x+=16) {
-            for (let z = 0; z < (sizeZ-1)*16; z+=16) {
-                var chunk = this.getChunk(x,z);
-                chunk.buildDecoration(game,this,this.noise,this.noise2,this.noise3);
-                    
-            }
-        }
+        this.chunks.forEach(c => {
+            c.buildDecoration(game,this,this.noise,this.noise2,this.noise3);
+        });
 
-        for (let x = 0; x < (sizeX-1)*16; x+=16) {
-            for (let z = 0; z < (sizeZ-1)*16; z+=16) {
-                var chunk = this.getChunk(x,z);
-                chunk.update(game);  
-            }
-        }
+        this.chunks.forEach(c => {
+            c.fillSunlight(game,this);
+        });
+        this.chunks.forEach(c => {
+            c.recalculateMesh(game,this); 
+        });
 
-        this.entites.push(new Player(64,64,64));
+        this.entites.push(new Player(16,64,16));
     }
 
     tick(game, deltaTime){
@@ -59,23 +57,42 @@ class World{
     getChunk(x,z){
         var chunkX = Math.floor(x/16);
         var chunkZ = Math.floor(z/16);
-       // console.log(chunkX+"("+x+") "+chunkZ+"("+z+")");
-        var chunk;
-        this.chunks.forEach(c => {
-            if (c.chunkPos.x == chunkX && c.chunkPos.z == chunkZ) chunk = c;
-        });
-        return chunk;
+        return this.chunks[chunkX + (chunkZ*this.sizeX)];
     }
 
     setBlockAt(game, x,y,z,block,update=true){
-        //console.log("Trying setting block at "+x+" "+Math.round(y)+" "+z);
+
         var chunk = this.getChunk(x,z);
         if (chunk == null) return false;
         var localBlockPosX = x&15;
+        var localBlockPosZ = z&15;
+
+        chunk.setBlockAt(localBlockPosX,Math.round(y),localBlockPosZ,block);
+        if (update){
+            chunk.update(game,this);
+            if (localBlockPosX==15) this.getChunk(x+1,z).update(game,this);
+            if (localBlockPosX==0) this.getChunk(x-1,z).update(game,this);
+            if (localBlockPosZ==15) this.getChunk(x,z+1).update(game,this);
+            if (localBlockPosZ==0) this.getChunk(x,z-1).update(game,this);
+        }
+    }
+
+    getBlockAt(x,y,z){
+        var chunk = this.getChunk(x,z);
+        if (chunk == null) return null;
+        var localBlockPosX = x&15;
         var localBlockPoxZ = z&15;
-        //console.log("Setting block at "+localBlockPosX+" "+Math.round(y)+" "+localBlockPoxZ);
-        chunk.setBlockAt(localBlockPosX,Math.round(y),localBlockPoxZ,block);
-        if (update)chunk.update(game);
+        return chunk.getBlockAt(localBlockPosX,y,localBlockPoxZ);
+
+    }
+
+    getLightAt(x,y,z){
+        var chunk = this.getChunk(x,z);
+        if (chunk == null) return 0;
+        var localBlockPosX = x&15;
+        var localBlockPoxZ = z&15;
+        return chunk.getLightAt(localBlockPosX,y,localBlockPoxZ);
+
     }
 
     rayPickBlock(game,x,y,z,direction,range){

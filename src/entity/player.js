@@ -47,8 +47,9 @@ class Player extends Entity{
             if (block != null) game.world.setBlockAt(game,block.x,block.y, block.z, null);
         }
         if (game.input.getRightClicked()){
-            var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+2,this.pos.z+0.5,cameraDirection,6);
+            var block = game.world.rayPickBlock(game,this.pos.x+0.75,this.pos.y+1.6,this.pos.z+0.75,cameraDirection,12);
             var direction = {x:Math.round(cameraDirection.x),y:Math.round(cameraDirection.y),z:Math.round(cameraDirection.z)};
+            //console.log(direction.x+ " "+direction.y+" "+direction.z+" "+block.x+" "+block.y+" "+block.z);
             if (block != null) game.world.setBlockAt(game,block.x+direction.x,block.y+direction.y, block.z+direction.z, game.blocks.dirt);
         }
 
