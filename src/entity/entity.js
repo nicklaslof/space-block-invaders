@@ -1,11 +1,11 @@
 class Entity {
     constructor(posX, posY, posZ) {
         this.pos = {x:posX, y:posY, z:posZ};
-        this.speed = 8;
+        this.speed = 0.1;
         
     }
 
-    tick (game, deltaTime){
+    tick (game){
 
     }
 

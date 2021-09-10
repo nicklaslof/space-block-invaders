@@ -48,7 +48,7 @@ class Input{
         return v;
     }
 
-    tick(game, deltaTime){
+    tick(game){
         // reset all inputs and read them on each tick
         this.axes = {x:0,y:0};
         this.firePressed = false;

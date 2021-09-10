@@ -32,34 +32,55 @@ class Game{
         this.meshBuilder = new MeshBuilder();
         
         this.blocks = new Blocks(this);
-        this.world = new World(this, 16,16);
+        this.world = new World(this, 5,5);
        
         this.last = performance.now();
         this.counter = 0;
         this.fps = 0;
+        this.tickRate = 1000/60;
+        this.accumulator = 0;
     }
 
     mainLoop(){
         var now = performance.now();
-        var deltaTime = (now - this.last)/1000;
+        var deltaTime = now - this.last;
         this.last = now;
+        this.accumulator += deltaTime;
+        var ticked = false;
 
-        this.counter += deltaTime;
-        this.fps++;
+        while(this.accumulator >= this.tickRate) {
+            this.input.tick(this);
+            this.world.tick(this);
+            this.accumulator -= this.tickRate;
+            this.ticks++;
+            ticked = true;
+        }
+
+        if (ticked){
+            var interpolationOffset = this.accumulator / this.tickRate;
+            this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+            this.gl.clearColor(0.1,0.5,0.9,1);
+            this.gl.enable(this.gl.DEPTH_TEST);
+            this.gl.depthFunc(this.gl.LESS);
+            this.gl.enable(this.gl.CULL_FACE);
+            this.gl.disable(this.gl.BLEND);
+            this.world.render(this);
+            this.fps++;
+            this.counter++;
+            this.gl.flush();
+       }
+
+
+
+
+       
         
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-        this.gl.clearColor(0.1,0.5,0.9,1);
-        this.gl.enable(this.gl.DEPTH_TEST);
-        this.gl.depthFunc(this.gl.LESS);
-        this.gl.enable(this.gl.CULL_FACE);
-        this.gl.disable(this.gl.BLEND);
+   
 
-        this.input.tick(this,deltaTime);
+        
 
-        this.world.tick(this,deltaTime);
-        this.world.render(this);
 
-        if (this.counter > 1){
+        if (this.counter == 60){
             console.log(now/1000+ " FPS: "+this.fps);
             this.counter = this.fps = 0;
         }

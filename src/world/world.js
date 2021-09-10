@@ -33,13 +33,13 @@ class World{
         this.entites.push(new Player(16,64,16));
     }
 
-    tick(game, deltaTime){
+    tick(game){
         this.chunks.forEach(c => {
-           c.tick(game,deltaTime);
+           c.tick(game);
        });
 
         this.entites.forEach(e => {
-            e.tick(game,deltaTime);
+            e.tick(game);
         });
 
     }

@@ -161,7 +161,7 @@ class Chunk{
         }
     }
 
-    tick(game, deltaTime){
+    tick(game){
 
     }
 

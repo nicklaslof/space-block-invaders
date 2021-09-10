@@ -13,14 +13,13 @@ class Player extends Entity{
         this.timeFallen = 0;
     }
 
-    tick (game, deltaTime){
+    tick (game){
         this.velocity.x = 0;
         this.velocity.z = 0;
         this.strafe.x = 0;
         this.strafe.z = 0;
-        //console.log(this.pos.y);
         if (this.jump){
-            this.jumpAngle += deltaTime*9;
+            this.jumpAngle += 0.144;
             var j = Math.sin(this.jumpAngle);
 
             this.tempVector.y = this.pos.y += j/8;
@@ -33,8 +32,8 @@ class Player extends Entity{
             if (this.jumpAngle >= (Math.PI*2)) this.jump = false;
         }
 
-        game.camera.rotate((game.input.getMouseX()/9) * deltaTime);
-        game.camera.rotateX((game.input.getMouseY()/9) * deltaTime);
+        game.camera.rotate((game.input.getMouseX()/9) * 0.016);
+        game.camera.rotateX((game.input.getMouseY()/9) * 0.016);
         let cameraDirection = game.camera.getDirection();
 
         this.velocity.z = game.input.axes.y;
@@ -61,9 +60,9 @@ class Player extends Entity{
             //normalize it to prevent moving faster when strafing and moving forward/backward at the same time
             this.normalize(this.tempVector);
 
-            //multiply the final normalized movement with the speed the player will move multiplied with the deltatime
-            this.tempVector.x *= deltaTime*this.speed;
-            this.tempVector.z *= deltaTime*this.speed;
+            //multiply the final normalized movement with the speed the player will move
+            this.tempVector.x *= this.speed;
+            this.tempVector.z *= this.speed;
 
             //finally add the current position of the player to the calculated movement vector
             this.tempVector.x += this.pos.x;
@@ -74,12 +73,12 @@ class Player extends Entity{
             if (this.canMove(game,this.tempVector.x,this.pos.y, this.pos.z)==null && this.canMove(game,this.tempVector.x,this.pos.y+1, this.pos.z)==null) this.pos.x += this.tempVector.x-this.pos.x;
             if (this.canMove(game,this.pos.x,this.pos.y,this.tempVector.z)==null && this.canMove(game,this.pos.x,this.pos.y+1,this.tempVector.z)==null) this.pos.z += this.tempVector.z-this.pos.z;
         }
-        var increasedFallSpeed = (this.timeFallen*4)+1;
-        this.tempVector.y = this.pos.y - (deltaTime*(10*increasedFallSpeed));
+        var increasedFallSpeed = (this.timeFallen)+1;
+        this.tempVector.y = this.pos.y - (increasedFallSpeed/60);
         var groundBlock = this.onGround(game,this.tempVector.y);
         if (!groundBlock && !this.jump){
             this.pos.y += this.tempVector.y-this.pos.y;
-            this.timeFallen += deltaTime;
+            this.timeFallen++;
         }else{
             if (!this.jump){
                 this.timeFallen = 0;
