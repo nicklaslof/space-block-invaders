@@ -20,6 +20,7 @@ class Texture{
             let v2 = (this.height * h)+v;
 
             this.uvs = [[u,v2,0.0],[u2,v2,0.0], [u2,v,0.0],[u,v,0.0]];
+            console.log(this.uvs);
             this.dirty = false;
         }
         return this.uvs;
