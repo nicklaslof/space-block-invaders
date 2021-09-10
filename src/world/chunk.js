@@ -48,17 +48,17 @@ class Chunk{
                     if (blockId != undefined) {
                         var block = game.blocks.get(blockId);
                         if (world.getBlockAt(worldPosBlock.x, y + 1, worldPosBlock.z) == undefined)
-                            MeshBuilder.top(block.topTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x,y+1,worldPosBlock.z), block.getSideColor(x,y,z));
+                            MeshBuilder.top(block.topTexture.getUVs(), m, x, y, z, null, block.getSideColor(x,y,z), this.buildTopLightArray(world,worldPosBlock.x,y,worldPosBlock.z));
                         if (world.getBlockAt(worldPosBlock.x - 1, y, worldPosBlock.z) == undefined)
-                            MeshBuilder.left(block.sideTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x-1,y,worldPosBlock.z)-0.05, 1, block.getSideColor(x,y,z));
+                            MeshBuilder.left(block.sideTexture.getUVs(), m, x, y, z, null, 1, block.getSideColor(x,y,z),this.buildLeftLightArray(world,worldPosBlock.x,y,worldPosBlock.z));
                         if (world.getBlockAt(worldPosBlock.x + 1, y, worldPosBlock.z) == undefined)
-                            MeshBuilder.right(block.sideTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x+1,y,worldPosBlock.z)-0.1, 1, block.getSideColor(x,y,z));
+                            MeshBuilder.right(block.sideTexture.getUVs(), m, x, y, z, null, 1, block.getSideColor(x,y,z),this.buildRightLightArray(world,worldPosBlock.x,y,worldPosBlock.z));
                         if (world.getBlockAt(worldPosBlock.x, y, worldPosBlock.z + 1) == undefined)
-                            MeshBuilder.front(block.sideTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x,y,worldPosBlock.z+1)-0.15, 1, block.getSideColor(x,y,z));
+                            MeshBuilder.front(block.sideTexture.getUVs(), m, x, y, z, null, 1, block.getSideColor(x,y,z),this.buildFrontLightArray(world,worldPosBlock.x,y,worldPosBlock.z));
                         if (world.getBlockAt(worldPosBlock.x, y, worldPosBlock.z - 1) == undefined)
-                            MeshBuilder.back(block.sideTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x,y,worldPosBlock.z-1)-0.2, 1, block.getSideColor(x,y,z));
+                            MeshBuilder.back(block.sideTexture.getUVs(), m, x, y, z, null, 1, block.getSideColor(x,y,z),this.buildBackLightArray(world,worldPosBlock.x,y,worldPosBlock.z));
                         if (world.getBlockAt(worldPosBlock.x, y - 1, worldPosBlock.z) == undefined)
-                            MeshBuilder.bottom(block.sideTexture.getUVs(), m, x, y, z, world.getLightAt(worldPosBlock.x,y-1,worldPosBlock.z), block.getSideColor(x,y,z));
+                            MeshBuilder.bottom(block.sideTexture.getUVs(), m, x, y, z, null, block.getSideColor(x,y,z),this.buildBottomLightArray(world,worldPosBlock.x,y,worldPosBlock.z));
                     }
                 }
             }
@@ -69,6 +69,150 @@ class Chunk{
         this.mesh.setPos(this.worldPos.x, 0, this.worldPos.z);
         this.mesh.updateMesh();
         this.mesh.cleanUp();
+    }
+
+    buildFrontLightArray(world,x,y,z){
+        var lightArray = [];
+
+        var above = world.getLightAt(x,y + 1, z+1);
+        var below = world.getLightAt(x, y - 1, z+1);
+
+        var frontLeft = world.getLightAt(x-1, y-1, z+1);
+        var frontRight = world.getLightAt(x+1, y-1, z+1);
+
+        var frontUpperLeft = world.getLightAt(x-1, y, z+1);
+        var frontUpperRight = world.getLightAt(x+1, y, z+1);
+
+        var left = world.getLightAt(x-1, y, z+1);
+        var right = world.getLightAt(x+1, y, z+1);
+        var leftUpper = world.getLightAt(x-1, y+1, z+1);
+        var rightUpper = world.getLightAt(x+1, y+1, z+1);
+
+        lightArray[3] = (above+leftUpper+frontUpperLeft)/3;
+        lightArray[2] = (above+frontUpperRight+rightUpper)/3;
+        lightArray[1] = (below+right+frontRight)/3;
+        lightArray[0] = (below+left+frontLeft)/3;
+        return lightArray;
+    }
+
+    buildBackLightArray(world,x,y,z){
+        var lightArray = [];
+
+        var above = world.getLightAt(x,   y + 1, z-1);
+        var below = world.getLightAt(x,   y - 1, z-1);
+
+        var  frontLeft = world.getLightAt(x+1,   y-1 , z-1);
+        var frontRight = world.getLightAt(x-1,   y-1 , z-1);
+
+        var frontUpperLeft = world.getLightAt(x+1,   y , z-1);
+        var frontUpperRight = world.getLightAt(x-1,   y , z-1);
+
+        var left = world.getLightAt(x+1,   y, z-1);
+        var right = world.getLightAt(x-1,   y, z-1);
+        var leftUpper = world.getLightAt(x+1,   y+1, z-1);
+        var rightUpper = world.getLightAt(x-1,   y+1, z-1);
+
+        lightArray[3] = (above+leftUpper+frontUpperLeft)/3;
+        lightArray[2] = (above+frontUpperRight+rightUpper)/3;
+        lightArray[1] = (below+right+frontRight)/3;
+        lightArray[0] = (below+left+frontLeft)/3
+
+        return lightArray;
+    }
+
+    buildLeftLightArray(world,x,y,z){
+        var lightArray = [];
+
+        var above = world.getLightAt(x-1,   y + 1, z);
+        var below = world.getLightAt(x-1,   y - 1, z);
+
+        var frontLeft = world.getLightAt(x-1,   y-1 , z-1);
+        var frontRight = world.getLightAt(x-1,   y-1 , z+1);
+
+        var frontUpperLeft = world.getLightAt(x-1,   y , z-1);
+        var frontUpperRight = world.getLightAt(x-1,   y , z+1);
+
+        var left = world.getLightAt(x-1,   y, z-1);
+        var right = world.getLightAt(x-1,   y, z+1);
+        var leftUpper = world.getLightAt(x-1,   y+1, z-1);
+        var rightUpper = world.getLightAt(x-1,   y+1, z+1);
+
+        lightArray[3] = (above+leftUpper+frontUpperLeft)/3;
+        lightArray[2] = (above+frontUpperRight+rightUpper)/3;
+        lightArray[1] = (below+right+frontRight)/3;
+        lightArray[0] = (below+left+frontLeft)/3;
+
+        return lightArray;
+    }
+
+    buildRightLightArray(world,x,y,z){
+        var lightArray = [];
+
+        var above = world.getLightAt(x+1,   y + 1, z);
+        var below = world.getLightAt(x+1,   y - 1, z);
+
+        var frontLeft = world.getLightAt(x+1,   y-1 , z+1);
+        var frontRight = world.getLightAt(x+1,   y-1 , z-1);
+
+        var frontUpperLeft = world.getLightAt(x+1,   y , z+1);
+        var frontUpperRight = world.getLightAt(x+1,   y , z-1);
+
+        var left = world.getLightAt(x+1,   y, z+1);
+        var right = world.getLightAt(x+1,   y, z-1);
+        var leftUpper = world.getLightAt(x+1,   y+1, z+1);
+        var rightUpper = world.getLightAt(x+1,   y+1, z-1);
+
+        lightArray[3] = (above+leftUpper+frontUpperLeft)/3;
+        lightArray[2] = (above+frontUpperRight+rightUpper)/3;
+        lightArray[1] = (below+right+frontRight)/3;
+        lightArray[0] = (below+left+frontLeft)/3
+
+        return lightArray;
+    }
+
+
+    buildTopLightArray(world,x,y,z){
+        var lightArray = [];
+
+        var north = world.getLightAt(x, y + 1, z + 1);
+        var northEast = world.getLightAt(x+1, y + 1, z+1);
+        var northWest = world.getLightAt(x-1, y + 1, z+1);
+        var west = world.getLightAt(x-1, y + 1, z);
+        var east = world.getLightAt(x+1, y + 1, z);
+        var south = world.getLightAt(x,y + 1, z - 1);
+        var southEast = world.getLightAt(x+1, y + 1, z - 1);
+        var southWest = world.getLightAt(x-1, y + 1, z - 1);
+        var above = world.getLightAt(x, y + 1, z);
+
+        lightArray[1] = (north+northWest+west+above)/4;
+        lightArray[2] = (north+northEast+east+above)/4;
+        lightArray[0] = (south+southWest+west+above)/4;
+        lightArray[3] = (south+southEast+east+above)/4;
+        return lightArray;
+    }
+
+    buildBottomLightArray(world,x,y,z){
+        var lightArray = [];
+
+        var north = world.getLightAt(x,   y - 1, z-1);
+        var northEast = world.getLightAt(x+1, y - 1, z-1);
+        var northWest = world.getLightAt(x-1, y - 1, z-1);
+
+        var west = world.getLightAt(x-1, y - 1, z);
+        var east = world.getLightAt(x+1, y - 1, z);
+
+        var south = world.getLightAt(x,   y - 1, z+1);
+        var southEast = world.getLightAt(x+1, y - 1, z+1);
+        var southWest = world.getLightAt(x-1, y - 1, z+1);
+
+        var below = world.getLightAt(x,   y - 1, z);
+
+        lightArray[0] = (north+northWest+west+below)/4;
+        lightArray[1] = (north+northEast+east+below)/4;
+        lightArray[3] = (south+southWest+west+below)/4;
+        lightArray[2] = (south+southEast+east+below)/4;
+
+        return lightArray;
     }
 
     buildDecoration(game,world,noise1,noise2,noise3){
