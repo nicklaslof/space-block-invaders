@@ -46,7 +46,8 @@ class Game{
         var deltaTime = now - this.last;
         this.last = now;
         this.accumulator += deltaTime;
-        var ticked = false;
+        var ticked = true;
+        this.counter += deltaTime;
 
         while(this.accumulator >= this.tickRate) {
             this.input.tick(this);
@@ -64,23 +65,13 @@ class Game{
             this.gl.depthFunc(this.gl.LESS);
             this.gl.enable(this.gl.CULL_FACE);
             this.gl.disable(this.gl.BLEND);
-            this.world.render(this);
+            this.world.render(this,interpolationOffset);
             this.fps++;
-            this.counter++;
             this.gl.flush();
        }
 
 
-
-
-       
-        
-   
-
-        
-
-
-        if (this.counter == 60){
+        if (this.counter > 1000){
             console.log(now/1000+ " FPS: "+this.fps);
             this.counter = this.fps = 0;
         }

@@ -1,15 +1,27 @@
 class Entity {
     constructor(posX, posY, posZ) {
         this.pos = {x:posX, y:posY, z:posZ};
+        this.previousPosition = {x:0, y:0, z:0};
+        this.interpolatedPos = {x:0, y:0, z:0};
         this.speed = 0.1;
         
     }
 
     tick (game){
+        this.previousPosition.x = this.pos.x;
+        this.previousPosition.y = this.pos.y;
+        this.previousPosition.z = this.pos.z;
 
     }
 
-    render(game){
+    render(game,interpolationOffset){
+        this.interpolatedPos.x = this.previousPosition.x + (this.pos.x - this.previousPosition.x) * interpolationOffset;
+        this.interpolatedPos.y = this.previousPosition.y + (this.pos.y - this.previousPosition.y) * interpolationOffset;
+        this.interpolatedPos.z = this.previousPosition.z + (this.pos.z - this.previousPosition.z) * interpolationOffset;
+
+        
+
+        game.camera.setPos(this.interpolatedPos);
 
     }
 

@@ -44,13 +44,13 @@ class World{
 
     }
 
-    render(game){
+    render(game,interpolationOffset){
         this.chunks.forEach(c => {
             c.render(game);
         });
 
         this.entites.forEach(e => {
-            e.render(game);
+            e.render(game,interpolationOffset);
         });
     }
 

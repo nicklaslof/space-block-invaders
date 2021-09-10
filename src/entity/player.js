@@ -14,6 +14,7 @@ class Player extends Entity{
     }
 
     tick (game){
+        super.tick(game);
         this.velocity.x = 0;
         this.velocity.z = 0;
         this.strafe.x = 0;
@@ -94,7 +95,7 @@ class Player extends Entity{
         game.camera.setPos(this.pos);
     }
 
-    render(game){
+    render(game,interpolationOffset){
         
     }
 
