@@ -86,7 +86,21 @@ class Game{
         return Math.floor(this.getRandomFloat(min,max));
     }
 
-    
+    playPlayerShoot(){
+        zzfx(20000,...[1.02,,143,.03,.08,.05,1,.97,4.4,,,,,,,,,.83,.01,.25]); // Shoot 1221
+    }
+
+    playerInvaderHit(){
+        zzfx(20000,...[1.14,,203,.02,.12,.5,4,4.77,,.1,,,,.9,,.5,,.84,.01]); // Explosion 1226
+    }
+
+    playInvaderDied(){
+        zzfx(20000,...[2.43,,591,,.26,.73,2,4.95,1,,,,,.1,4.4,.4,.22,.54,.06,.14]); // Explosion 1227
+    }
+
+    playInvaderShooting(v){
+        zzfx(20000,...[v,,371,,,.3,,2.57,-4.5,8.9,,,,.7,,.1,,.68,.1,.08]); // Hit 1228
+    }
 
 }
 

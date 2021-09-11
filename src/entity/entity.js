@@ -127,6 +127,16 @@ class Entity {
         v.z *= len;
     }
 
+    distance(v1, v2) {
+        let x = v1.x - v2.x
+        let z = v1.z - v2.z;
+        return Math.hypot(x, z);
+    }
+
+    distanceToOtherEntity(entity){
+        return this.distance(this.pos, entity.pos);
+    }
+
     addBox(m,x,y,z,texture){
         MeshBuilder.top(texture.getUVs(),m,x,y,z,1,this.c,null);
         MeshBuilder.left(texture.getUVs(),m,x,y,z,0.8,1,this.c,null);

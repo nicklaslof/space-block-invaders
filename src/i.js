@@ -1,10 +1,20 @@
 import Game from "./game.js";
 
-var g = new Game();
+var started = false;
 
-mainLoop();
+window.onload = function () {
+        onkeydown=e=>{
+            document.getElementById("s").style.display = "none";
+            if (!started){
+                var game = new Game();
+                started = true;
+                gameloop();
 
-function mainLoop(){
-    requestAnimationFrame(mainLoop);
-    g.mainLoop();
-}
+            }
+
+            function gameloop(){
+                requestAnimationFrame(gameloop);
+                game.mainLoop();
+            }
+    }
+};

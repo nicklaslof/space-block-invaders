@@ -87,6 +87,17 @@ class Invader extends Entity{
             b.speed = 0.5;
             b.sourceEntityType = this.type;
             game.world.addEntity(b);
+            var distanceToPlayer = this.distanceToOtherEntity(game.world.player);
+            var volume = (game.world.sizeX*16) - distanceToPlayer;
+            volume /= game.world.sizeX*16;
+            if (volume > 0.5) volume *= 1.5;
+            if (volume < 0.5) volume *= 0.75;
+            volume = Math.max(0.1,Math.min(2,volume));
+            console.log(distanceToPlayer + " "+volume);
+            //distanceToPlayer /= game.world.sizeX*80;
+            //console.log(1.0-distanceToPlayer);
+
+            game.playInvaderShooting(volume);
         }else{
             this.shootCounter--;
         }
@@ -117,12 +128,14 @@ class Invader extends Entity{
             this.changeBackCAfterHit = true;
             this.hitCounter = 40;
             this.health--;
+            game.playerInvaderHit();
         }
 
         //this.disposed = true;
     }
 
     onDisposed(game){
+        game.playInvaderDied();
         for (let i = 0; i < game.getRandomInt(5,10); i++) {
             game.world.addParticle(game,game.getRandomFloat(this.pos.x-1,this.pos.x+2),game.getRandomFloat(this.pos.y,this.pos.y+8),game.getRandomFloat(this.pos.z,this.pos.z+12),
             {x:game.getRandomFloat(-1,1),y:game.getRandomFloat(-1,0),z:game.getRandomFloat(-1,1)},120);
