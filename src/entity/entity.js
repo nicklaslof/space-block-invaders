@@ -1,9 +1,11 @@
+import MeshBuilder from "../gl/meshbuilder.js";
 class Entity {
     constructor(posX, posY, posZ) {
         this.pos = {x:posX, y:posY, z:posZ};
-        this.previousPosition = {x:0, y:0, z:0};
+        this.previousPosition = {x:posX, y:posY, z:posZ};
         this.interpolatedPos = {x:0, y:0, z:0};
         this.speed = 0.1;
+        this.disposed = false;
         
     }
 
@@ -19,10 +21,13 @@ class Entity {
         this.interpolatedPos.y = this.previousPosition.y + (this.pos.y - this.previousPosition.y) * interpolationOffset;
         this.interpolatedPos.z = this.previousPosition.z + (this.pos.z - this.previousPosition.z) * interpolationOffset;
 
-    
+        if (this.mesh != null){
+            //if (this.type == "b") console.log(this.pos);
+            //this.mesh.setPos(this.interpolatedPos.x,this.interpolatedPos.y,this.interpolatedPos.z);
+            this.mesh.setPos(this.interpolatedPos.x,this.interpolatedPos.y, this.interpolatedPos.z);
 
-        game.camera.setPos(this.interpolatedPos);
-
+            this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,0);
+        }
     }
 
     canMove(game, x,y,z){
@@ -82,6 +87,15 @@ class Entity {
         }
         v.x *= len;
         v.z *= len;
+    }
+
+    addBox(m,x,y,z,texture){
+        MeshBuilder.top(texture.getUVs(),m,x,y,z,1,this.c,null);
+        MeshBuilder.left(texture.getUVs(),m,x,y,z,1,1,this.c,null);
+        MeshBuilder.right(texture.getUVs(),m,x,y,z,1,1,this.c,null);
+        MeshBuilder.bottom(texture.getUVs(),m,x,y,z,1,this.c,null);
+        MeshBuilder.front(texture.getUVs(),m,x,y,z,1,1,this.c,null);
+        MeshBuilder.back(texture.getUVs(),m,x,y,z,1,1,this.c,null);
     }
 }
 export default Entity;

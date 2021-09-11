@@ -1,3 +1,4 @@
+import Invader from "../entity/invader.js";
 import Player from "../entity/player.js";
 import Chunk from "./chunk.js";
 
@@ -6,7 +7,7 @@ class World{
         this.sizeX = sizeX;
         this.sizeZ = sizeZ;
         this.chunks = [];
-        this.entites = [];
+        this.entities = [];
         this.noise = new SimplexNoise();
         this.noise2 = new SimplexNoise();
         this.noise3 = new SimplexNoise();
@@ -14,7 +15,7 @@ class World{
         for (let x = 0; x < sizeX*16; x+=16) {
             for (let z = 0; z < sizeZ*16; z+=16) {
                 var chunk = new Chunk(game, {x:x,z:z},this.noise,this.noise2,this.noise3);
-                console.log("added chunk "+x+ " "+z+" at "+ (x + (z*sizeX)));
+                console.log("added chunk "+x+ " "+z+" at "+ " ");
                 this.chunks[x/16 + ((z/16)*sizeX)]=chunk;     
             }
         }
@@ -30,7 +31,11 @@ class World{
             c.recalculateMesh(game,this); 
         });
 
-        this.entites.push(new Player(16,64,16));
+        this.entities.push(new Player(48,64,48));
+        for (let i = 0; i < 30; i++) {
+            this.entities.push(new Invader(game,game.getRandomInt(0,128),55,game.getRandomInt(0,128)));
+        }
+        
     }
 
     tick(game){
@@ -38,10 +43,10 @@ class World{
            c.tick(game);
        });
 
-        this.entites.forEach(e => {
+        this.entities.forEach(e => {
             e.tick(game);
+            if (e.disposed) this.removeEntity(e);
         });
-
     }
 
     render(game,interpolationOffset){
@@ -49,7 +54,7 @@ class World{
             c.render(game);
         });
 
-        this.entites.forEach(e => {
+        this.entities.forEach(e => {
             e.render(game,interpolationOffset);
         });
     }
@@ -93,6 +98,22 @@ class World{
         var localBlockPoxZ = z&15;
         return chunk.getLightAt(localBlockPosX,y,localBlockPoxZ);
 
+    }
+
+    addEntity(entity){
+        this.entities.push(entity);
+    }
+
+    removeEntity(entity){
+        this.removeFromList(entity,this.entities);
+    }
+
+    removeFromList(object,list){
+        for(let i = list.length - 1; i >= 0; i--) {
+            if(list[i] === object) {
+                list.splice(i, 1);
+            }
+        }
     }
 
     rayPickBlock(game,x,y,z,direction,range){

@@ -7,7 +7,9 @@ class Mesh{
     constructor(gl, x,y,z){
         this.verticies = [];
         this.modelViewMatrix = matrix4.create();
-        this.position = {x,y,z};
+        this.position = [x,y,z];
+        this.setPos(x,y,z);
+        console.log(this.position);
         this.scale = [1,1,1];
         this.gl = gl;
         this.quaternion = quaternion.create();
@@ -24,6 +26,7 @@ class Mesh{
         this.lightsBuffer = gl.createBuffer();
         this.uvsBuffer = gl.createBuffer();
         this.indiciesBuffer = gl.createBuffer();
+        //matrix4.fromRotationTranslationScale(this.modelViewMatrix, this.quaternion, [this.position.x, this.position.y, this.position.z],this.scale);
     }
 
     //Add verticies, colors, UVs and lights to this mesh
@@ -89,18 +92,21 @@ class Mesh{
     }
     //Translate this mesh
     t(x, y, z){
-        this.position.x += x;
-        this.position.y += y;
-        this.position.z += z;
-        this.updateMatrix();
+        var v = [x-this.position[0],y-this.position[1],z-this.position[2]];
+        matrix4.translate(this.modelViewMatrix,this.modelViewMatrix,this.position);
+
+        this.position[0] = x;
+        this.position[1] = y;
+        this.position[2] = z;
     }
 
     //Move this mesh to a new position.
     setPos(x, y, z){
-        this.position.x = x;
-        this.position.y = y;
-        this.position.z = z;
-        this.updateMatrix();
+        var v = [x-this.position[0],y-this.position[1],z-this.position[2]];
+        matrix4.translate(this.modelViewMatrix,this.modelViewMatrix,v);
+        this.position[0] = x;
+        this.position[1] = y;
+        this.position[2] = z;
     }
     //Scale the mesh
     setS(s){
@@ -143,7 +149,7 @@ class Mesh{
 
     //Update the mesh modelviewmatrix with the current rotation, position and scale
     updateMatrix(){
-        matrix4.fromRotationTranslationScale(this.modelViewMatrix, this.quaternion, [this.position.x, this.position.y, this.position.z],this.scale);
+        //matrix4.fromRotationTranslationScale(this.modelViewMatrix, this.quaternion, [this.position.x, this.position.y, this.position.z],this.scale);
     }
 
     updateCols(c){

@@ -1,3 +1,4 @@
+import Bullet from "./bullet.js";
 import Entity from "./entity.js";
 const up = {x:0,y:1,z:0};
 const down = {x:0,y:-1,z:0}
@@ -5,6 +6,7 @@ class Player extends Entity{
 
     constructor(xPos, yPos, zPos) {
         super(xPos,yPos,zPos);
+        this.type = "p";
         this.velocity = {x:0,z:0};
         this.strafe = {x:0,z:0};
         this.tempVector = {x:0,y:0,z:0};
@@ -43,6 +45,12 @@ class Player extends Entity{
         if (game.input.axes.x > 0) this.cross(this.strafe,cameraDirection,down);
 
         if (game.input.getLeftClicked()){
+            var invertedCameraDirection = {x:-cameraDirection.x,y:-cameraDirection.y,z:-cameraDirection.z};
+            console.log(this.pos);
+            game.world.addEntity(new Bullet(game,this.pos.x+(invertedCameraDirection.x*5),this.pos.y+0.8+(invertedCameraDirection.y*5),this.pos.z+(invertedCameraDirection.z*5),invertedCameraDirection));
+        }
+
+        /*if (game.input.getLeftClicked()){
             var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+1.6,this.pos.z+0.5,cameraDirection,6);
             if (block != null) game.world.setBlockAt(game,block.x,block.y, block.z, null);
         }
@@ -51,7 +59,7 @@ class Player extends Entity{
             var direction = {x:Math.round(cameraDirection.x),y:Math.round(cameraDirection.y),z:Math.round(cameraDirection.z)};
             //console.log(direction.x+ " "+direction.y+" "+direction.z+" "+block.x+" "+block.y+" "+block.z);
             if (block != null) game.world.setBlockAt(game,block.x+direction.x,block.y+direction.y, block.z+direction.z, game.blocks.dirt);
-        }
+        }*/
 
         if (this.velocity.x !=0 || this.velocity.z != 0 || this.strafe.x != 0 || this.strafe.z !=0){
             //combine forward/backward movement with strafe movement and multiply that with the direction the camera is facing
@@ -98,6 +106,8 @@ class Player extends Entity{
 
     render(game,interpolationOffset){
         super.render(game,interpolationOffset);
+
+        game.camera.setPos(this.interpolatedPos);
     }
 
     
