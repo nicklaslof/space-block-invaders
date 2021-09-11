@@ -2,6 +2,7 @@ import Invader from "../entity/invader.js";
 import Particle from "../entity/particle.js";
 import Player from "../entity/player.js";
 import Chunk from "./chunk.js";
+import * as SimplexNoise from '../lib/noise.js';
 
 class World{
     constructor(game, sizeX, sizeZ) {
@@ -10,9 +11,9 @@ class World{
         this.chunks = [];
         this.entities = [];
         this.particles = [];
-        this.noise = new SimplexNoise();
-        this.noise2 = new SimplexNoise();
-        this.noise3 = new SimplexNoise();
+        this.noise = new SimplexNoise.SimplexNoise();
+        this.noise2 = new SimplexNoise.SimplexNoise();
+        this.noise3 = new SimplexNoise.SimplexNoise();
         this.spawnNewInvaderCounter = 400;
 
         for (let x = 0; x < sizeX*16; x+=16) {
