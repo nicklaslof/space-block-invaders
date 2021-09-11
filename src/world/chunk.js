@@ -256,10 +256,10 @@ class Chunk{
 
             for (let z = 0; z < 16; z++) {
                 for (let y = 0; y < 64; y++) {
-                    //if (y == 0) this.setBlockAt(x, y, z, game.blocks.dirt);
+                    if (y == 0) this.setBlockAt(x, y, z, game.blocks.dirt);
                    // if (y == 1 && z == 3) this.setBlockAt(x, y, z, game.blocks.dirt);
                    // if (y == 2 && z == 3) this.setBlockAt(x, y, z, game.blocks.dirt);
-                   if (y < 20){
+                  /* if (y < 20){
                         this.setBlockAt(x, y, z, game.blocks.dirt);
                         continue;
                     }
@@ -287,7 +287,7 @@ class Chunk{
                     if ((n+n2+n5) * 32 > y) {
                         this.setBlockAt(x, y, z, game.blocks.limestone);
                         //if (n5 > 0.2 || n4 > 0.2)this.setBlockAt(x, y, z, null);
-                    }
+                    }*/
                     
                 }
             }

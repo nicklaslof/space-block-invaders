@@ -1,4 +1,5 @@
 import Invader from "../entity/invader.js";
+import Particle from "../entity/particle.js";
 import Player from "../entity/player.js";
 import Chunk from "./chunk.js";
 
@@ -8,6 +9,7 @@ class World{
         this.sizeZ = sizeZ;
         this.chunks = [];
         this.entities = [];
+        this.particles = [];
         this.noise = new SimplexNoise();
         this.noise2 = new SimplexNoise();
         this.noise3 = new SimplexNoise();
@@ -31,10 +33,12 @@ class World{
             c.recalculateMesh(game,this); 
         });
 
-        this.entities.push(new Player(48,64,48));
-        for (let i = 0; i < 30; i++) {
-            this.entities.push(new Invader(game,game.getRandomInt(0,128),55,game.getRandomInt(0,128)));
-        }
+        this.entities.push(new Player(2,64,2));
+       // for (let i = 0; i < 30; i++) {
+       //     this.entities.push(new Invader(game,game.getRandomInt(0,128),55,game.getRandomInt(0,128)));
+       // }
+
+       this.entities.push(new Invader(game,16,10,16));
         
     }
 
@@ -45,7 +49,23 @@ class World{
 
         this.entities.forEach(e => {
             e.tick(game);
+            // This is very inefficent. Should just check surrounding areas
+            this.entities.forEach(e2 =>{
+                if (e2 != e){
+                    var collides = e2.doesCollide(e);
+                    if (collides){
+                        console.log(collides);
+                        e.onCollision(game,this,e2);
+                    }
+                }
+                
+            });
             if (e.disposed) this.removeEntity(e);
+        });
+
+        this.particles.forEach(p => {
+            p.tick(game);
+            if (p.disposed) this.removeParticle(p);
         });
     }
 
@@ -56,6 +76,10 @@ class World{
 
         this.entities.forEach(e => {
             e.render(game,interpolationOffset);
+        });
+
+        this.particles.forEach(p => {
+            p.render(game,interpolationOffset);
         });
     }
 
@@ -104,8 +128,16 @@ class World{
         this.entities.push(entity);
     }
 
+    addParticle(game,x,y,z,direction,ttl){
+        this.particles.push(new Particle(game,x,y,z,direction,ttl));
+    }
+
     removeEntity(entity){
         this.removeFromList(entity,this.entities);
+    }
+
+    removeParticle(particle){
+        this.removeFromList(particle,this.particles);
     }
 
     removeFromList(object,list){

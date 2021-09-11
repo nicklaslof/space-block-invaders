@@ -4,34 +4,57 @@ class Entity {
         this.pos = {x:posX, y:posY, z:posZ};
         this.previousPosition = {x:posX, y:posY, z:posZ};
         this.interpolatedPos = {x:0, y:0, z:0};
+        this.tempVector = {x:0,y:0,z:0};
         this.speed = 0.1;
         this.disposed = false;
+        this.tempAABB = {x:0,y:0,z:0};
+        this.AABB = {minX:0,minY:0,minZ:0,maxX:0,maxY:0,maxZ:0};
+        this.sizeX = 0.8;
+        this.sizeY = 1;
+        this.sizeZ = 0.8;
+        this.health = 1;
+
         
     }
 
     tick (game){
+        if (this.health<0){
+            this.disposed = true;
+            this.onDisposed(game);
+        }
         this.previousPosition.x = this.pos.x;
         this.previousPosition.y = this.pos.y;
         this.previousPosition.z = this.pos.z;
 
+        this.AABB.minX=this.pos.x;
+        this.AABB.minY=this.pos.y;
+        this.AABB.minZ=this.pos.z;
+        this.AABB.maxX=this.pos.x+this.sizeX;
+        this.AABB.maxY=this.pos.y+this.sizeY;
+        this.AABB.maxZ=this.pos.z+this.sizeZ;
+
+        if (this.hurtCounter >0) this.hurtCounter--;
+
     }
 
-    render(game,interpolationOffset){
+    render(game,interpolationOffset,render=true){
+        if (this.disposed) return;
         this.interpolatedPos.x = this.previousPosition.x + (this.pos.x - this.previousPosition.x) * interpolationOffset;
         this.interpolatedPos.y = this.previousPosition.y + (this.pos.y - this.previousPosition.y) * interpolationOffset;
         this.interpolatedPos.z = this.previousPosition.z + (this.pos.z - this.previousPosition.z) * interpolationOffset;
 
         if (this.mesh != null){
             //if (this.type == "b") console.log(this.pos);
-            //this.mesh.setPos(this.interpolatedPos.x,this.interpolatedPos.y,this.interpolatedPos.z);
-            this.mesh.setPos(this.interpolatedPos.x,this.interpolatedPos.y, this.interpolatedPos.z);
+            this.mesh.setPos(this.interpolatedPos.x,this.interpolatedPos.y,this.interpolatedPos.z);
 
-            this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,0);
+            if (render)this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,0);
+        
         }
     }
 
     canMove(game, x,y,z){
         //y = y + 2;
+        this.tempAABB = {minX:x,minY:y,minZ:z,maxX:x+this.sizeX,maxY:y+this.sizeY,maxZ:z+this.sizeZ};
         var radius = 0.4;
         let x1 = Math.round(x + radius);
         let z1 = Math.round(z + radius);
@@ -60,14 +83,29 @@ class Entity {
             var block = game.blocks.get(blockId);
             if (block == null) return null;
             var blockPos = {x:chunk.worldPos.x+localBlockPosX,y:Math.abs(Math.ceil(y)),z:chunk.worldPos.z+localBlockPoxZ};
-            var cameraAABB = {minX:x,minY:y,minZ:z,maxX:x+0.8,maxY:y+1,maxZ:z+0.8};
-            var intersects = block.intersects(blockPos,cameraAABB);
+            
+            var intersects = block.intersects(blockPos,this.tempAABB);
             if (intersects) return blockPos;
             return null;
         }
 
     onGround(game,y){
         return this.canMove(game, this.pos.x,y,this.pos.z);
+        
+    }
+
+    doesCollide(e){
+        if (e.AABB == null || this.AABB == null) return false;
+        return (e.AABB.minX <= this.AABB.maxX && e.AABB.maxX >= this.AABB.minX) &&
+         (e.AABB.minY <= this.AABB.maxY && e.AABB.maxY >= this.AABB.minY) &&
+         (e.AABB.minZ <= this.AABB.maxZ && e.AABB.maxZ >= this.AABB.minZ);
+    }
+
+    onCollision(game,world, e){
+
+    }
+
+    onDisposed(game){
         
     }
 
@@ -91,11 +129,11 @@ class Entity {
 
     addBox(m,x,y,z,texture){
         MeshBuilder.top(texture.getUVs(),m,x,y,z,1,this.c,null);
-        MeshBuilder.left(texture.getUVs(),m,x,y,z,1,1,this.c,null);
-        MeshBuilder.right(texture.getUVs(),m,x,y,z,1,1,this.c,null);
+        MeshBuilder.left(texture.getUVs(),m,x,y,z,0.8,1,this.c,null);
+        MeshBuilder.right(texture.getUVs(),m,x,y,z,0.7,1,this.c,null);
         MeshBuilder.bottom(texture.getUVs(),m,x,y,z,1,this.c,null);
-        MeshBuilder.front(texture.getUVs(),m,x,y,z,1,1,this.c,null);
-        MeshBuilder.back(texture.getUVs(),m,x,y,z,1,1,this.c,null);
+        MeshBuilder.front(texture.getUVs(),m,x,y,z,0.6,1,this.c,null);
+        MeshBuilder.back(texture.getUVs(),m,x,y,z,1,0.8,this.c,null);
     }
 }
 export default Entity;

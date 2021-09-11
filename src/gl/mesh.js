@@ -9,7 +9,7 @@ class Mesh{
         this.modelViewMatrix = matrix4.create();
         this.position = [x,y,z];
         this.setPos(x,y,z);
-        console.log(this.position);
+        //console.log(this.position);
         this.scale = [1,1,1];
         this.gl = gl;
         this.quaternion = quaternion.create();

@@ -9,7 +9,7 @@ class Player extends Entity{
         this.type = "p";
         this.velocity = {x:0,z:0};
         this.strafe = {x:0,z:0};
-        this.tempVector = {x:0,y:0,z:0};
+        
         this.jump = false;
         this.jumpCounter = 0;
         this.timeFallen = 0;
@@ -46,7 +46,7 @@ class Player extends Entity{
 
         if (game.input.getLeftClicked()){
             var invertedCameraDirection = {x:-cameraDirection.x,y:-cameraDirection.y,z:-cameraDirection.z};
-            console.log(this.pos);
+            //console.log(this.pos);
             game.world.addEntity(new Bullet(game,this.pos.x+(invertedCameraDirection.x*5),this.pos.y+0.8+(invertedCameraDirection.y*5),this.pos.z+(invertedCameraDirection.z*5),invertedCameraDirection));
         }
 
@@ -76,7 +76,7 @@ class Player extends Entity{
             //finally add the current position of the player to the calculated movement vector
             this.tempVector.x += this.pos.x;
             this.tempVector.z += this.pos.z;
-
+            
             //check if the player can move in X or Z direction separetly to allow sliding on the walls. Otherwise the player would get stuck when close to a wall
             //which would be very annoying. If the player can move to the new position then transform the current position to that position.
             if (this.canMove(game,this.tempVector.x,this.pos.y, this.pos.z)==null && this.canMove(game,this.tempVector.x,this.pos.y+1, this.pos.z)==null) this.pos.x += this.tempVector.x-this.pos.x;
