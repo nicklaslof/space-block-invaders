@@ -310,7 +310,7 @@ class Chunk{
     }
 
     render(game){
-        this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,0);
+        this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,game.world.player.hitCounter>1?1:0);
     }
 
     update(game,world){

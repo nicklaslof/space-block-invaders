@@ -16,7 +16,7 @@ class Game{
         
         onkeydown=onkeyup=e=> this.keys[e.keyCode] = e.type;
         this.input = new Input();
-        this.ui = new UI();
+
 
         this.gameCanvas = document.getElementById("c");
         this.gameCanvas.width = "1280";
@@ -26,16 +26,18 @@ class Game{
 
         this.gl = this.gameCanvas.getContext("webgl",{antialias: true});
         //this.shaderProgram = new ShaderProgram(this.gl,`precision lowp float;attribute vec4 p;attribute vec4 c;attribute vec4 l;attribute vec2 u;uniform mat4 mvm;uniform mat4 pm;varying vec4 vc;varying vec2 uv;varying float d;varying vec4 li;void main(){gl_Position=pm*mvm*p;vc=c;li=l;uv=u;d=gl_Position.z/27.0;}`,`precision lowp float;varying vec4 vc;varying vec2 uv;varying float d;varying vec4 li;uniform sampler2D s;uniform float h;void main(){vec4 col=texture2D(s,uv)*vc;gl_FragColor=col;}`);
-        this.shaderProgram = new ShaderProgram(this.gl,`precision lowp float;attribute vec4 p;attribute vec4 c;attribute vec4 l;attribute vec2 u;uniform mat4 mvm;uniform mat4 pm;varying vec4 vc;varying vec2 uv;varying float d;varying vec4 li;void main(){gl_Position=pm*mvm*p;vc=c;li=l;uv=u;d=gl_Position.z/27.0;}`,`precision lowp float;varying vec4 vc;varying vec2 uv;varying float d;varying vec4 li;uniform sampler2D s;uniform float h;void main(){vec4 col=texture2D(s,uv,2.0)*vc;float z=gl_FragCoord.z/gl_FragCoord.w;float fogFactor=exp2(-0.02*0.02*z*z*1.442695);fogFactor=clamp(fogFactor,0.0,1.0);vec4 c=vec4(col.rgb,col.a)*li;if (col.rgb == vec3(0.0,0.0,0.0))discard;gl_FragColor=mix(vec4(0.1,0.5,0.9,1),c,fogFactor);}`);
+        this.shaderProgram = new ShaderProgram(this.gl,`precision lowp float;attribute vec4 p;attribute vec4 c;attribute vec4 l;attribute vec2 u;uniform mat4 mvm;uniform mat4 pm;varying vec4 vc;varying vec2 uv;varying float d;varying vec4 li;void main(){gl_Position=pm*mvm*p;vc=c;li=l;uv=u;d=gl_Position.z/27.0;}`,`precision lowp float;varying vec4 vc;varying vec2 uv;varying float d;varying vec4 li;uniform sampler2D s;uniform float h;void main(){vec4 col=texture2D(s,uv,2.0)*vc;float z=gl_FragCoord.z/gl_FragCoord.w;float fogFactor=exp2(-0.02*0.02*z*z*1.442695);fogFactor=clamp(fogFactor,0.0,1.0);vec4 c=vec4(col.rgb,col.a)*li;if (col.rgb == vec3(0.0,0.0,0.0))discard;if(h>0.0)gl_FragColor=vec4(1,0,0,1);else gl_FragColor=mix(vec4(0.1,0.5,0.9,1),c,fogFactor);}`);
         this.glTexture = new GlTexture(this.gl,"./assets/t.png");
         this.camera = new Camera(this.gl,0,0,0);
 
+        this.ui = new UI(this.glTexture.image);
 
         this.meshBuilder = new MeshBuilder();
         
         this.blocks = new Blocks(this);
-        this.world = new World(this, 12,12);
        
+        this.introShowing = true;
+        
         this.last = performance.now();
         this.counter = 0;
         this.fps = 0;
@@ -44,6 +46,41 @@ class Game{
     }
 
     mainLoop(){
+
+        if (this.introShowing){
+            this.input.tick(this);
+            this.ui.render(this);
+            if (this.input.firePressed){
+                this.introShowing = false;
+                this.generating = true;
+                this.generateMessageShown = false;
+            }
+            return;
+        }
+
+        if (this.generating && !this.generateMessageShown){
+            this.ui.render(this);
+            this.generateMessageShown = true;
+            return;
+        }
+
+        if (this.generating && this.world == null){
+
+            this.world = new World(this, 12,12);
+            this.generating = false;
+            return;
+        }
+
+        if (this.world.player != null && this.world.player.health <1){
+            this.gameover = true;
+            this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+            this.gl.clearColor(0,0,0,1);
+            this.ui.render(this);
+            return;
+
+        }
+
+    
         var now = performance.now();
         var deltaTime = now - this.last;
         if (deltaTime>500) deltaTime = 16; // Dont allow too big jump in time.
@@ -63,13 +100,14 @@ class Game{
         if (ticked && !this.glTexture.dirty){
             var interpolationOffset = this.accumulator / this.tickRate;
             this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-            this.gl.clearColor(0.1,0.5,0.9,1);
+            if (this.world.player.hitCounter>1)this.gl.clearColor(1.0,0,0,1);
+            else this.gl.clearColor(0.1,0.5,0.9,1);
             this.gl.enable(this.gl.DEPTH_TEST);
             this.gl.depthFunc(this.gl.LESS);
             this.gl.enable(this.gl.CULL_FACE);
             this.gl.disable(this.gl.BLEND);
             this.world.render(this,interpolationOffset);
-            this.ui.render();
+            this.ui.render(this);
             this.fps++;
             this.gl.flush();
        }
@@ -104,6 +142,10 @@ class Game{
 
     playInvaderShooting(v){
         zzfx(20000,...[v,,371,,,.3,,2.57,-4.5,8.9,,,,.7,,.1,,.68,.1,.08]); // Hit 1228
+    }
+
+    playPlayerHit(){
+        zzfx(20000,...[1.5,,267,,,.73,,2.4,-0.2,-0.8,,,,.7,-1.6,.2,,.56,.05,.03]); // Hit 1258
     }
 
 }

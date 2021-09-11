@@ -13,7 +13,7 @@ class World{
         this.noise = new SimplexNoise();
         this.noise2 = new SimplexNoise();
         this.noise3 = new SimplexNoise();
-        this.spawnNewInvaderCounter = 0;
+        this.spawnNewInvaderCounter = 400;
 
         for (let x = 0; x < sizeX*16; x+=16) {
             for (let z = 0; z < sizeZ*16; z+=16) {
@@ -174,8 +174,8 @@ class World{
         this.entities.push(entity);
     }
 
-    addParticle(game,x,y,z,direction,ttl){
-        this.particles.push(new Particle(game,x,y,z,direction,ttl));
+    addParticle(game,x,y,z,direction,ttl,c=[0.8,0.3,0.3,1.0]){
+        this.particles.push(new Particle(game,x,y,z,direction,ttl,c));
     }
 
     removeEntity(entity){

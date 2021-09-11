@@ -3,11 +3,11 @@ import MeshBuilder from "../gl/meshbuilder.js";
 import Texture from "../gl/texture.js";
 
 class Particle extends Entity{
-    constructor(game,x,y,z,direction,ttl){
+    constructor(game,x,y,z,direction,ttl,c){
         super(x,y,z);
         this.texture = new Texture(game.glTexture.tex,71,5,16,16);
         var m = MeshBuilder.start(game.gl,x,y,z);
-        this.c = [0.8,0.3,0.3,1.0];
+        this.c = c;
         
         this.addBox(m,x,y,z,this.texture);
 

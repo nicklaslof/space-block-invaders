@@ -2,13 +2,13 @@
 class GlTexture {
     constructor(gl, file) {
         this.tex = gl.createTexture();
-        let image = new Image();
+        this.image = new Image();
         this.dirty = true;;
-        image.onload  = () =>{
+        this.image.onload  = () =>{
             var anisotropyExtension = gl.getExtension("EXT_texture_filter_anisotropic");
             gl.bindTexture(gl.TEXTURE_2D, this.tex);
 
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
             gl.generateMipmap(gl.TEXTURE_2D);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST_MIPMAP_NEAREST);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -19,7 +19,7 @@ class GlTexture {
 
         };
 
-        image.src = file;
+        this.image.src = file;
     }
 }
 

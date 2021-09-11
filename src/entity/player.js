@@ -13,12 +13,15 @@ class Player extends Entity{
         this.jump = false;
         this.jumpCounter = 0;
         this.timeFallen = 0;
-        this.speed = 0.25;
+        this.speed = 5;
         this.shootDelay = 0;
+        this.health = 5;
+        this.hitCounter = 0;
     }
 
     tick (game){
         super.tick(game);
+        this.hitCounter--;
         this.velocity.x = 0;
         this.velocity.z = 0;
         this.strafe.x = 0;
@@ -54,7 +57,9 @@ class Player extends Entity{
             var invertedCameraDirection = {x:-cameraDirection.x,y:-cameraDirection.y,z:-cameraDirection.z};
             //console.log(this.pos);
             game.playPlayerShoot();
-            game.world.addEntity(new Bullet(game,this.pos.x+(invertedCameraDirection.x*5)+0.2,this.pos.y+1.2+(invertedCameraDirection.y*5)+0.2,this.pos.z+(invertedCameraDirection.z*5),invertedCameraDirection));
+            var b = new Bullet(game,this.pos.x+(invertedCameraDirection.x*5)+0.2,this.pos.y+1.2+(invertedCameraDirection.y*5)+0.2,this.pos.z+(invertedCameraDirection.z*5),invertedCameraDirection);
+            b.sourceEntityType = this.type;
+            game.world.addEntity(b);
             this.shootDelay = 10;
         }
 
@@ -118,7 +123,22 @@ class Player extends Entity{
         game.camera.setPos(this.interpolatedPos);
     }
 
-    
+    onCollision(game,world,e){
+
+        console.log(e);
+        if (e.type == this.type || e.sourceEntityType == this.type) return;
+        if (this.hitCounter <= 0){
+            for (let i = 0; i < game.getRandomInt(5,10); i++) {
+                world.addParticle(game,game.getRandomFloat(this.pos.x-1,this.pos.x+2),game.getRandomFloat(this.pos.y,this.pos.y+8),game.getRandomFloat(this.pos.z,this.pos.z+12),{x:0,y:-1,z:0},120);
+            }
+            this.hitCounter = 40;
+            this.health--;
+            game.playPlayerHit();
+        }
+
+        //this.disposed = true;
+    }
+
 
  
 

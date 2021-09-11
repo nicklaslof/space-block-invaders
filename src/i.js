@@ -1,12 +1,13 @@
 import Game from "./game.js";
 
 var started = false;
+var game;
 
 window.onload = function () {
         onkeydown=e=>{
             document.getElementById("s").style.display = "none";
             if (!started){
-                var game = new Game();
+                
                 started = true;
                 gameloop();
 
@@ -14,6 +15,7 @@ window.onload = function () {
 
             function gameloop(){
                 requestAnimationFrame(gameloop);
+                if (game == null) game = new Game();
                 game.mainLoop();
             }
     }

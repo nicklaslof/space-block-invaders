@@ -18,7 +18,7 @@ class Entity {
     }
 
     tick (game){
-        if (this.health<0){
+        if (this.health<1){
             this.disposed = true;
             this.onDisposed(game);
         }
@@ -47,7 +47,7 @@ class Entity {
             //if (this.type == "b") console.log(this.pos);
             this.mesh.setPos(this.interpolatedPos.x,this.interpolatedPos.y,this.interpolatedPos.z);
 
-            if (render)this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,0);
+            if (render)this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,game.world.player.hitCounter>1?1:0);
         
         }
     }
@@ -119,11 +119,12 @@ class Entity {
     }
 
     normalize(v) {
-        let len = v.x * v.x + v.z * v.z;
+        let len = v.x * v.x + v.y * v.y + v.z * v.z;
         if (len > 0) {
           len = 1 / Math.sqrt(len);
         }
         v.x *= len;
+        v.y *= len;
         v.z *= len;
     }
 

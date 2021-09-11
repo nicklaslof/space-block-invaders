@@ -93,11 +93,20 @@ class Invader extends Entity{
             if (volume > 0.5) volume *= 1.5;
             if (volume < 0.5) volume *= 0.75;
             volume = Math.max(0.1,Math.min(1.5,volume));
-            console.log(distanceToPlayer + " "+volume);
-            //distanceToPlayer /= game.world.sizeX*80;
-            //console.log(1.0-distanceToPlayer);
-
             game.playInvaderShooting(volume);
+
+
+            if (distanceToPlayer < 40){
+                var direction = {x:game.world.player.pos.x - this.pos.x, y: game.world.player.pos.y - this.pos.y, z: game.world.player.pos.z - (this.pos.z+6)};
+                this.normalize(direction);
+                console.log(direction);
+                var b = new Bullet(game,this.pos.x,this.pos.y,this.pos.z+6,direction,[0.5,0.5,1.0,1.0]);
+                b.speed = 0.8;
+                b.sourceEntityType = this.type;
+                b.sizeX = b.sizeY = 4;
+                game.world.addEntity(b);
+            }
+
         }else{
             this.shootCounter--;
         }
@@ -107,7 +116,7 @@ class Invader extends Entity{
     render(game,interpolationOffset){
         super.render(game,interpolationOffset,false);
         // For some reason the color change doesn't work..   I spent an hour but can't find the reason.. it worked in my entry last year using the same code in the mesh class.
-        this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,0,null,this.colorChanged?[this.c, this.c, this.c, this.c]:null);
+        this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,game.world.player.hitCounter>1?1:0,null,this.colorChanged?[this.c, this.c, this.c, this.c]:null);
         this.colorChanged = false;
     }
     
