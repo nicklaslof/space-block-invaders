@@ -32,7 +32,7 @@ class Game{
         this.meshBuilder = new MeshBuilder();
         
         this.blocks = new Blocks(this);
-        this.world = new World(this, 2,2);
+        this.world = new World(this, 12,12);
        
         this.last = performance.now();
         this.counter = 0;
@@ -57,7 +57,7 @@ class Game{
             ticked = true;
         }
 
-        if (ticked){
+        if (ticked && !this.glTexture.dirty){
             var interpolationOffset = this.accumulator / this.tickRate;
             this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
             this.gl.clearColor(0.1,0.5,0.9,1);

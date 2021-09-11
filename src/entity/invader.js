@@ -1,6 +1,7 @@
 import Entity from "./entity.js";
 import MeshBuilder from "../gl/meshbuilder.js";
 import Texture from "../gl/texture.js";
+import Bullet from "./bullet.js";
 
 class Invader extends Entity{
 
@@ -13,6 +14,7 @@ class Invader extends Entity{
         this.hitCCountDown = 0;
         this.changeBackCAfterHit = false;
         this.hitCounter = 0;
+        this.shootCounter = 0;
      
         this.texture = new Texture(game.glTexture.tex,71,5,16,16);
         var m = MeshBuilder.start(game.gl,x,y,z);
@@ -69,7 +71,6 @@ class Invader extends Entity{
     tick(game){
         super.tick(game);
         this.hitCounter--;
-        //console.log(this.hitCCountDown+" "+this.changeBackCAfterHit);
         if (this.hitCCountDown>0) this.hitCCountDown--;
         if (this.changeBackCAfterHit && this.hitCCountDown <= 0){
             this.setC(this.baseColor);
@@ -78,9 +79,18 @@ class Invader extends Entity{
 
         this.counter++;
         var v = Math.sin(this.counter/30);
-       // console.log(this.pos);
-        //console.log(this.AABB);
         this.pos.z += v/5;
+
+        if (this.shootCounter <0){
+            this.shootCounter = 120;
+            var b = new Bullet(game,this.pos.x,this.pos.y+2,this.pos.z+6,{x:0,y:-1,z:0});
+            b.speed = 0.5;
+            b.sourceEntityType = this.type;
+            game.world.addEntity(b);
+        }else{
+            this.shootCounter--;
+        }
+
     }
 
     render(game,interpolationOffset){
@@ -97,6 +107,7 @@ class Invader extends Entity{
 
     onCollision(game,world,e){
         super.onCollision(game, world,e);
+        if (e.type == this.type || e.sourceEntityType == this.type) return;
         if (this.hitCounter <= 0){
             for (let i = 0; i < game.getRandomInt(5,10); i++) {
                 world.addParticle(game,game.getRandomFloat(this.pos.x-1,this.pos.x+2),game.getRandomFloat(this.pos.y,this.pos.y+8),game.getRandomFloat(this.pos.z,this.pos.z+12),{x:0,y:-1,z:0},120);

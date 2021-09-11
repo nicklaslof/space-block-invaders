@@ -13,6 +13,7 @@ class Player extends Entity{
         this.jump = false;
         this.jumpCounter = 0;
         this.timeFallen = 0;
+        this.speed = 0.25;
     }
 
     tick (game){
@@ -50,16 +51,16 @@ class Player extends Entity{
             game.world.addEntity(new Bullet(game,this.pos.x+(invertedCameraDirection.x*5),this.pos.y+0.8+(invertedCameraDirection.y*5),this.pos.z+(invertedCameraDirection.z*5),invertedCameraDirection));
         }
 
-        /*if (game.input.getLeftClicked()){
-            var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+1.6,this.pos.z+0.5,cameraDirection,6);
-            if (block != null) game.world.setBlockAt(game,block.x,block.y, block.z, null);
-        }
+        //if (game.input.getLeftClicked()){
+        //    var block = game.world.rayPickBlock(game,this.pos.x+0.5,this.pos.y+1.6,this.pos.z+0.5,cameraDirection,6);
+        //    if (block != null) game.world.setBlockAt(game,block.x,block.y, block.z, null);
+        //}
         if (game.input.getRightClicked()){
             var block = game.world.rayPickBlock(game,this.pos.x+0.75,this.pos.y+1.6,this.pos.z+0.75,cameraDirection,12);
             var direction = {x:Math.round(cameraDirection.x),y:Math.round(cameraDirection.y),z:Math.round(cameraDirection.z)};
             //console.log(direction.x+ " "+direction.y+" "+direction.z+" "+block.x+" "+block.y+" "+block.z);
             if (block != null) game.world.setBlockAt(game,block.x+direction.x,block.y+direction.y, block.z+direction.z, game.blocks.dirt);
-        }*/
+        }
 
         if (this.velocity.x !=0 || this.velocity.z != 0 || this.strafe.x != 0 || this.strafe.z !=0){
             //combine forward/backward movement with strafe movement and multiply that with the direction the camera is facing

@@ -9,9 +9,9 @@ class Entity {
         this.disposed = false;
         this.tempAABB = {x:0,y:0,z:0};
         this.AABB = {minX:0,minY:0,minZ:0,maxX:0,maxY:0,maxZ:0};
-        this.sizeX = 0.8;
+        this.sizeX = 1;
         this.sizeY = 1;
-        this.sizeZ = 0.8;
+        this.sizeZ = 1;
         this.health = 1;
 
         

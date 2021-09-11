@@ -18,14 +18,16 @@ class Bullet extends Entity{
         this.sizeX = 1;
         this.sizeY = 1;
         this.sizeZ = 1;
+        this.sourceEntityType = "";
+        this.speed = 1;
     }
 
     tick(game){
         super.tick(game);
         this.tempVector.x = this.tempVector.y = this.tempVector.z = 0;
-        this.tempVector.x += this.pos.x + (this.direction.x*2);
-        this.tempVector.y += this.pos.y + (this.direction.y*2);
-        this.tempVector.z += this.pos.z + (this.direction.z*2);
+        this.tempVector.x += this.pos.x + (this.direction.x*this.speed);
+        this.tempVector.y += this.pos.y + (this.direction.y*this.speed);
+        this.tempVector.z += this.pos.z + (this.direction.z*this.speed);
         var v = this.canMove(game,this.tempVector.x,this.tempVector.y,this.tempVector.z);
        // console.log(v);
         if (v == null){
@@ -33,6 +35,9 @@ class Bullet extends Entity{
             this.pos.y = this.tempVector.y;
             this.pos.z = this.tempVector.z;
         }else{
+           // if (this.sourceEntityType == "i"){
+                game.world.setBlockAt(game,v.x,v.y-1,v.z,null,true);
+           // }
             this.disposed = true;
         }
         this.ttl--;

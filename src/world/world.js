@@ -13,6 +13,7 @@ class World{
         this.noise = new SimplexNoise();
         this.noise2 = new SimplexNoise();
         this.noise3 = new SimplexNoise();
+        this.spawnNewInvaderCounter = 0;
 
         for (let x = 0; x < sizeX*16; x+=16) {
             for (let z = 0; z < sizeZ*16; z+=16) {
@@ -33,16 +34,60 @@ class World{
             c.recalculateMesh(game,this); 
         });
 
-        this.entities.push(new Player(2,64,2));
+
+        var spawnPosition = null;
+        var spawnTimeout = 1500;
+        while(spawnPosition == null && spawnTimeout > 0){
+            spawnTimeout--;
+            var x = game.getRandomInt(2,sizeX-2);
+            var z = game.getRandomInt(2,sizeZ-2);
+            console.log(x + " "+z);
+
+            var c = this.chunks[x + (z*this.sizeX)];
+            console.log(c.worldPos);
+            loop:for (let x = 0; x < 16; x++) {
+
+                for (let z = 0; z < 16; z++) {
+                    for (let y = 0; y < 64; y++) {
+                        var b = c.getBlockAt(x,y,z);
+                        var b1 = c.getBlockAt(x,y+1,z);
+                        var b2 = c.getBlockAt(x+1,y+1,z);
+                        var b3 = c.getBlockAt(x-1,y,z);
+                        var b4 = c.getBlockAt(x,y,z+1);
+                        var b5 = c.getBlockAt(x,y,z-1);
+                        if (b == "g" && b1 == null && b2 == null && b3 == null && b4 == null && b5 == null){
+                            spawnPosition = {x:c.worldPos.x+x,y:y+1,z:c.worldPos.z+z};
+                            console.log(spawnPosition);
+                            break loop;
+                        }
+                    }
+                }
+            }
+        }
+        if (spawnPosition == null) console.log("no spawn found");
+        this.entities.push(new Player(spawnPosition.x,spawnPosition.y,spawnPosition.z));
+
+        
        // for (let i = 0; i < 30; i++) {
        //     this.entities.push(new Invader(game,game.getRandomInt(0,128),55,game.getRandomInt(0,128)));
        // }
 
-       this.entities.push(new Invader(game,16,10,16));
+       
         
     }
 
     tick(game){
+
+
+        if (this.spawnNewInvaderCounter <0){
+
+            this.spawnNewInvaderCounter = 600;
+            this.entities.push(new Invader(game,game.getRandomFloat(16,(this.sizeX*16)-16),40,game.getRandomFloat(16,(this.sizeZ*16)-16)));
+
+        }else{
+            this.spawnNewInvaderCounter--;
+        }
+
         this.chunks.forEach(c => {
            c.tick(game);
        });
@@ -54,7 +99,7 @@ class World{
                 if (e2 != e){
                     var collides = e2.doesCollide(e);
                     if (collides){
-                        console.log(collides);
+                        //console.log(collides);
                         e.onCollision(game,this,e2);
                     }
                 }
@@ -99,10 +144,10 @@ class World{
         chunk.setBlockAt(localBlockPosX,Math.round(y),localBlockPosZ,block);
         if (update){
             chunk.update(game,this);
-            if (localBlockPosX==15) this.getChunk(x+1,z).update(game,this);
-            if (localBlockPosX==0) this.getChunk(x-1,z).update(game,this);
-            if (localBlockPosZ==15) this.getChunk(x,z+1).update(game,this);
-            if (localBlockPosZ==0) this.getChunk(x,z-1).update(game,this);
+            if (localBlockPosX==15 && this.getChunk(x+1,z) != null) this.getChunk(x+1,z).update(game,this);
+            if (localBlockPosX==0 && this.getChunk(x-1,z) != null) this.getChunk(x-1,z).update(game,this);
+            if (localBlockPosZ==15 && this.getChunk(x,z+1) != null) this.getChunk(x,z+1).update(game,this);
+            if (localBlockPosZ==0 && this.getChunk(x,z-1) != null) this.getChunk(x,z-1).update(game,this);
         }
     }
 
