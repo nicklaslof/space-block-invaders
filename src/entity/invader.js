@@ -92,7 +92,7 @@ class Invader extends Entity{
             volume /= game.world.sizeX*16;
             if (volume > 0.5) volume *= 1.5;
             if (volume < 0.5) volume *= 0.75;
-            volume = Math.max(0.1,Math.min(2,volume));
+            volume = Math.max(0.1,Math.min(1.5,volume));
             console.log(distanceToPlayer + " "+volume);
             //distanceToPlayer /= game.world.sizeX*80;
             //console.log(1.0-distanceToPlayer);

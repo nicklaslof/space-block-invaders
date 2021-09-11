@@ -17,11 +17,9 @@ class Input{
 
     handleMouseMouseDownEvent(e){
         this.leftClicked = e.button == 0;
-        this.rightClicked = e.button == 2;
     }
     handleMouseMouseUpEvent(e){
-        this.leftClicked != e.button == 0;
-        this.rightClicked != e.button == 2;
+        this.leftClicked = false;        
     }
 
     getMouseX(){
@@ -38,15 +36,11 @@ class Input{
 
     getLeftClicked(){
         let v = this.leftClicked;
-        this.leftClicked = false;
+        //this.leftClicked = false;
         return v;
     }
 
-    getRightClicked(){
-        let v = this.rightClicked;
-        this.rightClicked = false;
-        return v;
-    }
+
 
     tick(game){
         // reset all inputs and read them on each tick

@@ -14,6 +14,7 @@ class Player extends Entity{
         this.jumpCounter = 0;
         this.timeFallen = 0;
         this.speed = 0.25;
+        this.shootDelay = 0;
     }
 
     tick (game){
@@ -22,16 +23,20 @@ class Player extends Entity{
         this.velocity.z = 0;
         this.strafe.x = 0;
         this.strafe.z = 0;
+        if (this.shootDelay>0)this.shootDelay--;
         if (this.jump){
             this.jumpAngle += 0.144;
             var j = Math.sin(this.jumpAngle);
 
-            this.tempVector.y = this.pos.y += j/8;
+            this.tempVector.y = this.pos.y += j/4;
 
             var b = this.canMove(game,this.pos.x,this.tempVector.y,this.pos.z);
 
             if (b == null) this.pos.y += this.tempVector.y - this.pos.y;
-            else this.pos.y = b.y;
+            else{
+                this.pos.y = b.y;
+                this.jump = false;
+            }
 
             if (this.jumpAngle >= (Math.PI*2)) this.jump = false;
         }
@@ -45,11 +50,12 @@ class Player extends Entity{
         if (game.input.axes.x < 0) this.cross(this.strafe,cameraDirection,up);
         if (game.input.axes.x > 0) this.cross(this.strafe,cameraDirection,down);
 
-        if (game.input.getLeftClicked()){
+        if (game.input.getLeftClicked() && this.shootDelay <=0){
             var invertedCameraDirection = {x:-cameraDirection.x,y:-cameraDirection.y,z:-cameraDirection.z};
             //console.log(this.pos);
             game.playPlayerShoot();
-            game.world.addEntity(new Bullet(game,this.pos.x+(invertedCameraDirection.x*5),this.pos.y+0.8+(invertedCameraDirection.y*5),this.pos.z+(invertedCameraDirection.z*5),invertedCameraDirection));
+            game.world.addEntity(new Bullet(game,this.pos.x+(invertedCameraDirection.x*5)+0.2,this.pos.y+1.2+(invertedCameraDirection.y*5)+0.2,this.pos.z+(invertedCameraDirection.z*5),invertedCameraDirection));
+            this.shootDelay = 10;
         }
 
         //if (game.input.getLeftClicked()){

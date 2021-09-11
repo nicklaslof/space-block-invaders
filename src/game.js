@@ -6,6 +6,7 @@ import GlTexture from "./gl/gltexture.js";
 import Camera from "./gl/camera.js";
 import MeshBuilder from "./gl/meshbuilder.js";
 import Input from "./input/input.js";
+import UI from "./ui/ui.js";
 
 class Game{
 
@@ -15,12 +16,13 @@ class Game{
         
         onkeydown=onkeyup=e=> this.keys[e.keyCode] = e.type;
         this.input = new Input();
+        this.ui = new UI();
 
         this.gameCanvas = document.getElementById("c");
         this.gameCanvas.width = "1280";
         this.gameCanvas.height = "768";
 
-        this.gameCanvas.addEventListener('click', (e) => { this.gameCanvas.requestPointerLock();});
+        
 
         this.gl = this.gameCanvas.getContext("webgl",{antialias: true});
         //this.shaderProgram = new ShaderProgram(this.gl,`precision lowp float;attribute vec4 p;attribute vec4 c;attribute vec4 l;attribute vec2 u;uniform mat4 mvm;uniform mat4 pm;varying vec4 vc;varying vec2 uv;varying float d;varying vec4 li;void main(){gl_Position=pm*mvm*p;vc=c;li=l;uv=u;d=gl_Position.z/27.0;}`,`precision lowp float;varying vec4 vc;varying vec2 uv;varying float d;varying vec4 li;uniform sampler2D s;uniform float h;void main(){vec4 col=texture2D(s,uv)*vc;gl_FragColor=col;}`);
@@ -44,6 +46,7 @@ class Game{
     mainLoop(){
         var now = performance.now();
         var deltaTime = now - this.last;
+        if (deltaTime>500) deltaTime = 16; // Dont allow too big jump in time.
         this.last = now;
         this.accumulator += deltaTime;
         var ticked = true;
@@ -66,6 +69,7 @@ class Game{
             this.gl.enable(this.gl.CULL_FACE);
             this.gl.disable(this.gl.BLEND);
             this.world.render(this,interpolationOffset);
+            this.ui.render();
             this.fps++;
             this.gl.flush();
        }

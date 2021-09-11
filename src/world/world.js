@@ -82,7 +82,7 @@ class World{
 
         if (this.spawnNewInvaderCounter <0){
 
-            this.spawnNewInvaderCounter = 1600;
+            this.spawnNewInvaderCounter = 600;
             this.entities.push(new Invader(game,game.getRandomFloat(16,(this.sizeX*16)-16),40,game.getRandomFloat(16,(this.sizeZ*16)-16)));
 
         }else{
