@@ -2,14 +2,14 @@ import Entity from "./entity.js";
 import MeshBuilder from "../gl/meshbuilder.js";
 import Texture from "../gl/texture.js";
 class Bullet extends Entity{
-    constructor(game, x, y, z, direction,c=[5.0,5.0,5.0,5.0]) {
+    constructor(game, x, y, z, direction,c=[5.0,5.0,5.0,5.0],size=0.1) {
         super(x,y,z);
        // console.log("bullet at "+this.pos.x+" "+this.pos.y+" "+this.pos.z);
         this.type = "b";
         this.ttl = 100;
         this.direction = direction;
         this.texture = new Texture(game.glTexture.tex,71,5,16,16);
-        var m = MeshBuilder.start(game.gl,x,y,z,0.1);
+        var m = MeshBuilder.start(game.gl,x,y,z,size);
         this.c = c;
         this.addBox(m,x,y,z,this.texture);
 
@@ -35,13 +35,22 @@ class Bullet extends Entity{
             this.pos.y = this.tempVector.y;
             this.pos.z = this.tempVector.z;
         }else{
-           // if (this.sourceEntityType == "i"){
-           // for (let i = 0; i < game.getRandomInt(1,2); i++) {
-           //     game.world.addParticle(game,game.getRandomFloat(this.pos.x-1,this.pos.x+1),this.pos.y,game.getRandomFloat(this.pos.z-1,this.pos.z+1),{x:game.getRandomFloat(-1,1),y:game.getRandomFloat(-1,0),z:game.getRandomFloat(-1,1)},120,[0.8,0.8,0.0,1.0]);
-           // }
-                game.world.setBlockAt(game,v.x,v.y-1,v.z,null,true);
-           // }
             this.disposed = true;
+            if (v.y < 2) return;
+           // if (this.sourceEntityType == "i"){
+            for (let i = 0; i < game.getRandomInt(1,2); i++) {
+               game.world.addParticle(game,game.getRandomFloat(this.pos.x-1,this.pos.x+1),this.pos.y,game.getRandomFloat(this.pos.z-1,this.pos.z+1),{x:game.getRandomFloat(-1,1),y:game.getRandomFloat(-1,1),z:game.getRandomFloat(-1,1)},120,[0.8,0.8,0.0,1.0],0.05,0.05);
+            }
+                game.world.setBlockAt(game,v.x,v.y-1,v.z,null,true);
+                if (this.sourceEntityType == "i"){
+                    game.world.setBlockAt(game,v.x+1,v.y,v.z,null,true);
+                    game.world.setBlockAt(game,v.x-1,v.y,v.z,null,true);
+                    game.world.setBlockAt(game,v.x,v.y,v.z-1,null,true);
+                    game.world.setBlockAt(game,v.x,v.y,v.z+1,null,true);
+                    game.world.setBlockAt(game,v.x,v.y-2,v.z,null,true);
+                }
+           // }
+            
         }
         this.ttl--;
 

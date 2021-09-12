@@ -24,6 +24,8 @@ class Camera{
 
     //Increase the rotatation of the camera. Rotation is stored as radians
     rotateX(rot){
+        if (this.currentRotX + rot < -1.6) return;
+        if (this.currentRotX + rot > 1.6) return;
         quaternion.rotateX(this.quaternion, this.quaternion, rot);
         this.currentRotX += rot;
         this.updateRotation();

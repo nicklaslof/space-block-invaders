@@ -88,10 +88,10 @@ class Chunk{
         var leftUpper = world.getLightAt(x-1, y+1, z+1);
         var rightUpper = world.getLightAt(x+1, y+1, z+1);
 
-        lightArray[3] = (above+leftUpper+frontUpperLeft)/3;
-        lightArray[2] = (above+frontUpperRight+rightUpper)/3;
-        lightArray[1] = (below+right+frontRight)/3;
-        lightArray[0] = (below+left+frontLeft)/3;
+        lightArray[3] = (above+leftUpper+frontUpperLeft)/5;
+        lightArray[2] = (above+frontUpperRight+rightUpper)/5;
+        lightArray[1] = (below+right+frontRight)/5;
+        lightArray[0] = (below+left+frontLeft)/5;
         return lightArray;
     }
 
@@ -137,10 +137,10 @@ class Chunk{
         var leftUpper = world.getLightAt(x-1,   y+1, z-1);
         var rightUpper = world.getLightAt(x-1,   y+1, z+1);
 
-        lightArray[3] = (above+leftUpper+frontUpperLeft)/3;
-        lightArray[2] = (above+frontUpperRight+rightUpper)/3;
-        lightArray[1] = (below+right+frontRight)/3;
-        lightArray[0] = (below+left+frontLeft)/3;
+        lightArray[3] = (above+leftUpper+frontUpperLeft)/6;
+        lightArray[2] = (above+frontUpperRight+rightUpper)/6;
+        lightArray[1] = (below+right+frontRight)/6;
+        lightArray[0] = (below+left+frontLeft)/6;
 
         return lightArray;
     }

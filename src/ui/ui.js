@@ -16,14 +16,14 @@ class UI{
         this.ctx.clearRect(0,0,W,H);
 
         if (game.introShowing){
-            this.drawTextAt("Space block invaders",(W/2)-165,H/2,"white",24);
-            this.drawTextAt("A game for JS13k 2021 by Nicklas Löf",(W/2)-190,(H/2)+30,"white",16);
-            this.drawTextAt("WASD, space and mouse to play",(W/2)-150,(H/2)+60,"white",16);
-            this.drawTextAt("Protect your world from the invaders!",(W/2)-195,(H/2)+120,"white",16);
-            this.drawTextAt("Press space to start!",(W/2)-130,(H/2)+150,"white",16);
+            this.drawTextAt("Space block invaders",(W/2)-155,H/2,"white",24);
+            this.drawTextAt("A game for JS13k 2021 by Nicklas Löf",(W/2)-180,(H/2)+30,"white",16);
+            this.drawTextAt("WASD, space and mouse to play",(W/2)-140,(H/2)+60,"white",16);
+            this.drawTextAt("Protect your world from the invaders!",(W/2)-185,(H/2)+120,"white",16);
+            this.drawTextAt("Press space to start!",(W/2)-120,(H/2)+150,"white",16);
             
         }else if (game.generating){
-            this.drawTextAt("World is generating. Please wait",(W/2)-190,(H/2)+30,"white",16);
+            this.drawTextAt("World is generating. Please wait",(W/2)-150,(H/2)+30,"white",16);
         }else if (game.gameover){
             this.drawTextAt("Game over! Reload the page to play in a new random world!",(W/2)-290,(H/2)+30,"white",16);
         }else{

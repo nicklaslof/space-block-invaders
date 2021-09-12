@@ -62,6 +62,7 @@ class Invader extends Entity{
         
 
         this.counter = 0;
+        this.playerShootCounter = 0;
 
         this.sizeX = 1;
         this.sizeY = 6;
@@ -80,9 +81,10 @@ class Invader extends Entity{
         this.counter++;
         var v = Math.sin(this.counter/30);
         this.pos.z += v/5;
+        this.playerShootCounter--;
 
         if (this.shootCounter <0){
-            this.shootCounter = 120;
+            this.shootCounter = 60;
             var b = new Bullet(game,this.pos.x,this.pos.y+2,this.pos.z+6,{x:0,y:-1,z:0});
             b.speed = 0.5;
             b.sourceEntityType = this.type;
@@ -96,11 +98,12 @@ class Invader extends Entity{
             game.playInvaderShooting(volume);
 
 
-            if (distanceToPlayer < 40){
+            if (distanceToPlayer < 40 && this.playerShootCounter < 0){
+                this.playerShootCounter = 120;
                 var direction = {x:game.world.player.pos.x - this.pos.x, y: game.world.player.pos.y - this.pos.y, z: game.world.player.pos.z - (this.pos.z+6)};
                 this.normalize(direction);
                 console.log(direction);
-                var b = new Bullet(game,this.pos.x,this.pos.y,this.pos.z+6,direction,[0.5,0.5,1.0,1.0]);
+                var b = new Bullet(game,this.pos.x,this.pos.y,this.pos.z+6,direction,[0.5,0.5,1.0,1.0],1);
                 b.speed = 0.8;
                 b.sourceEntityType = this.type;
                 b.sizeX = b.sizeY = 4;

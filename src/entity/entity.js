@@ -53,9 +53,9 @@ class Entity {
     }
 
     canMove(game, x,y,z){
-        //y = y + 2;
-        this.tempAABB = {minX:x,minY:y,minZ:z,maxX:x+this.sizeX,maxY:y+this.sizeY,maxZ:z+this.sizeZ};
-        var radius = 0.4;
+        if (x > (game.world.sizeX*16)-2 || z > (game.world.sizeZ*16)-2 || x < 2 || z < 2) return {x:0,y:0,z:0};
+        this.tempAABB = {minX:x-(this.sizeX/2),minY:y,minZ:z-(this.sizeX/2),maxX:x+(this.sizeX/2),maxY:y+this.sizeY,maxZ:z+(this.sizeZ/2)};
+        var radius = 0.5;
         let x1 = Math.round(x + radius);
         let z1 = Math.round(z + radius);
         let x2 = Math.round(x - radius);

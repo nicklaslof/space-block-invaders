@@ -57,7 +57,7 @@ class Player extends Entity{
             var invertedCameraDirection = {x:-cameraDirection.x,y:-cameraDirection.y,z:-cameraDirection.z};
             //console.log(this.pos);
             game.playPlayerShoot();
-            var b = new Bullet(game,this.pos.x+(invertedCameraDirection.x*5)+0.2,this.pos.y+1.2+(invertedCameraDirection.y*5)+0.2,this.pos.z+(invertedCameraDirection.z*5),invertedCameraDirection);
+            var b = new Bullet(game,this.pos.x+(invertedCameraDirection.x*1)+0.2,this.pos.y+1.2+(invertedCameraDirection.y*1)+0.2,this.pos.z+(invertedCameraDirection.z*1),invertedCameraDirection);
             b.sourceEntityType = this.type;
             game.world.addEntity(b);
             this.shootDelay = 10;

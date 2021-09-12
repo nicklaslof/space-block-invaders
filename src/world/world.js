@@ -25,7 +25,9 @@ class World{
         }
 
         this.chunks.forEach(c => {
+            if (c.chunkPos.x > 1 && c.chunkPos.x < sizeX-1 && c.chunkPos.z > 1 && c.chunkPos.z < sizeZ-1)
             c.buildDecoration(game,this,this.noise,this.noise2,this.noise3);
+            else console.log(c.worldPos);
         });
 
         this.chunks.forEach(c => {
@@ -83,7 +85,7 @@ class World{
 
         if (this.spawnNewInvaderCounter <0){
 
-            this.spawnNewInvaderCounter = 600;
+            this.spawnNewInvaderCounter = 1400;
             this.entities.push(new Invader(game,game.getRandomFloat(16,(this.sizeX*16)-16),40,game.getRandomFloat(16,(this.sizeZ*16)-16)));
 
         }else{
@@ -175,8 +177,8 @@ class World{
         this.entities.push(entity);
     }
 
-    addParticle(game,x,y,z,direction,ttl,c=[0.8,0.3,0.3,1.0]){
-        this.particles.push(new Particle(game,x,y,z,direction,ttl,c));
+    addParticle(game,x,y,z,direction,ttl,c=[0.8,0.3,0.3,1.0],size=0.1,speed=0.3){
+        this.particles.push(new Particle(game,x,y,z,direction,ttl,c,size,speed));
     }
 
     removeEntity(entity){
