@@ -8,7 +8,7 @@ class Chunk{
 
         //All the blocks in the chunk and the lightmap for each block
         this.blocks = [];
-        this.lightMap = [];
+        this.lightMap = new Uint8Array((16*16)*256);
 
         this.buildChunkWorld(game, noise, noise2,noise3);
 
@@ -344,13 +344,13 @@ class Chunk{
     }
 
     setLightAt(x,y,z, light){
-        if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 64) throw "blah";
-        this.lightMap[(x * 16 + z) + (y * 64 * 16)] = light;
+        if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 64);
+        this.lightMap[(x * 16 + z) + (y * 64 * 16)] = light*10;
     }
 
     getLightAt(x,y,z){
         if (x < 0 || x > 15 || z < 0 || z > 15 || y < 0 || y > 64) return 0;
-        return this.lightMap[(x * 16 + z) + (y * 64 * 16)]; 
+        return this.lightMap[(x * 16 + z) + (y * 64 * 16)]/10; 
     }
 }
 

@@ -88,7 +88,7 @@ class Game{
         if (deltaTime>500) deltaTime = 16; // Dont allow too big jump in time.
         this.last = now;
         this.accumulator += deltaTime;
-        var ticked = true;
+        var ticked = false;
         this.counter += deltaTime;
 
         while(this.accumulator >= this.tickRate) {
@@ -102,6 +102,7 @@ class Game{
         // Don't render if the texture is still loading. If there was no ticks don't render anything. This will fix both ticks and rendering to 60fps
         if (ticked && !this.glTexture.dirty){
             var interpolationOffset = this.accumulator / this.tickRate;
+            //console.log(interpolationOffset);
             this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
             if (this.world.player.hitCounter>1)this.gl.clearColor(1.0,0,0,1);
             else this.gl.clearColor(0.3,0.7,0.9,1);

@@ -91,7 +91,7 @@ class Invader extends Entity{
 
         if (this.shootCounter <0){
             // Limit shooting to once every second
-            this.shootCounter = 60;
+            this.shootCounter = 240;
             var b = new Bullet(game,this.pos.x,this.pos.y+2,this.pos.z+6,{x:0,y:-1,z:0});
             b.speed = 0.5;
             b.sourceEntityType = this.type;
@@ -105,21 +105,23 @@ class Invader extends Entity{
             game.playInvaderShooting(volume); // Set the volume based on distance to the player
 
 
-            if (distanceToPlayer < 40 && this.playerShootCounter < 0){
-                // Aim and shoot a big bullet at the player every 2 second
-                this.playerShootCounter = 120;
-                var direction = {x:game.world.player.pos.x - this.pos.x, y: game.world.player.pos.y - this.pos.y, z: game.world.player.pos.z - (this.pos.z+6)};
-                this.normalize(direction);
-                console.log(direction);
-                var b = new Bullet(game,this.pos.x,this.pos.y,this.pos.z+6,direction,this.bulletColor,1);
-                b.speed = 0.8;
-                b.sourceEntityType = this.type;
-                b.sizeX = b.sizeY = 4;
-                game.world.addEntity(b);
-            }
+            
 
         }else{
             this.shootCounter--;
+        }
+
+        if (distanceToPlayer < 40 && this.playerShootCounter < 0){
+            // Aim and shoot a big bullet at the player every 2 second
+            this.playerShootCounter = 120;
+            var direction = {x:game.world.player.pos.x - this.pos.x, y: game.world.player.pos.y - this.pos.y, z: game.world.player.pos.z - (this.pos.z+6)};
+            this.normalize(direction);
+            console.log(direction);
+            var b = new Bullet(game,this.pos.x,this.pos.y,this.pos.z+6,direction,this.bulletColor,1);
+            b.speed = 0.8;
+            b.sourceEntityType = this.type;
+            b.sizeX = b.sizeY = 4;
+            game.world.addEntity(b);
         }
 
     }
