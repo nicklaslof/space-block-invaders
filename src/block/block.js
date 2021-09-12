@@ -12,7 +12,7 @@ class Block{
         // It can have different textures on sides and top
     }
 
-    // Generate 
+    // Is called when checking if something is colliding with this block. Return true or false. Classic AABB testing.
     intersects(blockPos,checkAABB){
         this.blockAABB.minX=blockPos.x-0.5;
         this.blockAABB.minY=blockPos.y;

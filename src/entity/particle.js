@@ -20,6 +20,7 @@ class Particle extends Entity{
     }
 
     tick(game){
+        // Moves the particle in the direction and speed. If it has reached the end of it's life dispose it
         super.tick(game);
         this.ttl--;
 

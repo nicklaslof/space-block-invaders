@@ -9,7 +9,7 @@ class Mesh{
         this.modelViewMatrix = matrix4.create();
         this.position = [x,y,z];
         this.setPos(x,y,z);
-        //console.log(this.position);
+
         this.scale = [1,1,1];
         this.gl = gl;
         this.quaternion = quaternion.create();
@@ -26,7 +26,7 @@ class Mesh{
         this.lightsBuffer = gl.createBuffer();
         this.uvsBuffer = gl.createBuffer();
         this.indiciesBuffer = gl.createBuffer();
-        //matrix4.fromRotationTranslationScale(this.modelViewMatrix, this.quaternion, [this.position.x, this.position.y, this.position.z],this.scale);
+
     }
 
     //Add verticies, colors, UVs and lights to this mesh
@@ -147,7 +147,7 @@ class Mesh{
         this.updateMatrix();
     }
 
-    //Update the mesh modelviewmatrix with the current rotation, position and scale
+    //Having some serious issues with getting this to work correctly. "My code works, I don't know why"
     updateMatrix(){
         //matrix4.fromRotationTranslationScale(this.modelViewMatrix, this.quaternion, [this.position.x, this.position.y, this.position.z],this.scale);
     }

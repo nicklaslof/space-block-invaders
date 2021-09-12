@@ -1,15 +1,15 @@
 import Entity from "./entity.js";
 import MeshBuilder from "../gl/meshbuilder.js";
 import Texture from "../gl/texture.js";
+// A bullet the player or an Invader shoots
 class Bullet extends Entity{
     constructor(game, x, y, z, direction,c=[5.0,5.0,5.0,5.0],size=0.1) {
         super(x,y,z);
-       // console.log("bullet at "+this.pos.x+" "+this.pos.y+" "+this.pos.z);
-        this.type = "b";
-        this.ttl = 100;
-        this.direction = direction;
-        this.texture = new Texture(game.glTexture.tex,71,5,16,16);
-        var m = MeshBuilder.start(game.gl,x,y,z,size);
+        this.type = "b"; // Silly quick way to check for entity types when doing collisions
+        this.ttl = 100; // The life length of the bullet
+        this.direction = direction; // The direction of the bullet
+        this.texture = new Texture(game.glTexture.tex,71,5,16,16); // The texture atlas location
+        var m = MeshBuilder.start(game.gl,x,y,z,size); // Create a Mesh with the specified size
         this.c = c;
         this.addBox(m,x,y,z,this.texture);
 
@@ -18,24 +18,28 @@ class Bullet extends Entity{
         this.sizeX = 1;
         this.sizeY = 1;
         this.sizeZ = 1;
-        this.sourceEntityType = "";
+        this.sourceEntityType = "";  // Can be set by the entity shooting the bullet. Is used in collisions to determinate if bullet should hurt or not (prevents Invaders to shoot eachother or themselves)
         this.speed = 1;
     }
 
     tick(game){
         super.tick(game);
+        // Check where this bullet is moving and if it's colliding with the world.
         this.tempVector.x = this.tempVector.y = this.tempVector.z = 0;
         this.tempVector.x += this.pos.x + (this.direction.x*this.speed);
         this.tempVector.y += this.pos.y + (this.direction.y*this.speed);
         this.tempVector.z += this.pos.z + (this.direction.z*this.speed);
         var v = this.canMove(game,this.tempVector.x,this.tempVector.y,this.tempVector.z);
-       // console.log(v);
+       
+        // No block collisions. Continue moving
         if (v == null){
             this.pos.x = this.tempVector.x;
             this.pos.y = this.tempVector.y;
             this.pos.z = this.tempVector.z;
         }else{
+            // We did hit a block. Dispose the bullet and add particles plus destroy the block. If it's an invader bullet do more damage.
             this.disposed = true;
+            // Stop us from falling out trough the bottom of the world
             if (v.y < 2) return;
            // if (this.sourceEntityType == "i"){
             for (let i = 0; i < game.getRandomInt(1,2); i++) {

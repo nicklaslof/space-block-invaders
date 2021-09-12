@@ -1,10 +1,12 @@
 import MeshBuilder from "../gl/meshbuilder.js";
+// A chunk represent parts of the world. Block size 16x16 and a depth of 64 blocks
 class Chunk{
     constructor(game, pos,noise,noise2,noise3) {
         this.worldPos = pos;
         this.chunkPos = {x:pos.x/16,z:pos.z/16};
         console.log("Creating chunk :"+pos.x+" "+pos.z+ "   "+this.chunkPos.x+"  "+this.chunkPos.z);
 
+        //All the blocks in the chunk and the lightmap for each block
         this.blocks = [];
         this.lightMap = [];
 
@@ -14,7 +16,7 @@ class Chunk{
     }
 
     fillSunlight(){
-
+        // Fill the whole level with a base darkness light value.
         for (let x = 0; x < 16; x++) {
             for (let z = 0; z < 16; z++) {
                 for (let y = 0; y < 64; y++) {
@@ -22,7 +24,7 @@ class Chunk{
                 }
             }
         }
-
+        // Iterate from top to bottom and set a lightvalue of 1 until the first block is reached. The rest of the blocks on that Y position will have the base darkness light value
         for (let x = 0; x < 16; x++) {
             for (let z = 0; z < 16; z++) {
             height: for (let y = 64; y > 0; y--) {
@@ -36,6 +38,7 @@ class Chunk{
 
     recalculateMesh(game,world) {
         this.mesh = null;
+        // Rebuild the mesh of this chunk.
         var m = MeshBuilder.start(game.gl, this.worldPos.x, 0, this.worldPos.z);
         var worldPosBlock = {x:0,z:0};
         for (let x = 0; x < 16; x++) {
@@ -47,6 +50,8 @@ class Chunk{
                     var blockId = this.getBlockAt(x, y, z);
                     if (blockId != undefined) {
                         var block = game.blocks.get(blockId);
+                        // Add each side of each block if it's not facing anything. This will save TONS of unescerary verticies and faces that are not visible anyway.
+                        // If the player breaks a block the mesh is recalculated and the gaps are filled.
                         if (world.getBlockAt(worldPosBlock.x, y + 1, worldPosBlock.z) == undefined)
                             MeshBuilder.top(block.topTexture.getUVs(), m, x, y, z, null, block.getSideColor(x,y,z), this.buildTopLightArray(world,worldPosBlock.x,y,worldPosBlock.z));
                         if (world.getBlockAt(worldPosBlock.x - 1, y, worldPosBlock.z) == undefined)
@@ -71,6 +76,9 @@ class Chunk{
         this.mesh.cleanUp();
     }
 
+    // Take the lightvalue off the surrounding blocks and set each corner of the block side to the values.
+    // WebGL will take care of smoothing out the area on the block side.
+    // Some of the arrays will have a slighty darker light (the lightvalue is divided with a higher value) to make the block sides easier to see
     buildFrontLightArray(world,x,y,z){
         var lightArray = [];
 
@@ -215,6 +223,7 @@ class Chunk{
         return lightArray;
     }
 
+    // Add trees based on noise value. If javascript had seed based RNG we would get the same tree locations for the same seed.
     buildDecoration(game,world,noise1,noise2,noise3){
         for (let x = 0; x < 16; x++) {
 
@@ -232,6 +241,8 @@ class Chunk{
         }
     }
 
+    // Generate an ugly tree by setting blocks into the world. Make sure each call doesn't update the mesh of the chunk.
+    // This will also place the blocks outside this chunk. Otherwise the trees would be cut in half
     generateTree(game,world,x,y,z, treeNoise){
         var height = (treeNoise * 100)-70;
         for (let trunk = y; trunk < y+height; trunk++) {
@@ -251,6 +262,9 @@ class Chunk{
         }
     }
 
+    // Dark black magic. Use SimpleX noise to create a world. Since SimpleX noise is based on world positions we will get a smooth
+    // transition between each chunk.
+    // Some stuff is commented for various variations of the world.
     buildChunkWorld(game, noise, noise2, noise3) {
         for (let x = 0; x < 16; x++) {
 
@@ -293,6 +307,7 @@ class Chunk{
             }
         }
 
+        // Set the top dirt block to always be grass
         for (let x = 0; x < 16; x++) {
 
             for (let z = 0; z < 16; z++) {

@@ -4,6 +4,7 @@ import Leaves from "./leaves.js";
 import Limestone from "./limestone.js";
 import Wood from "./wood.js";
 
+// All the blocks in the game.
 class Blocks{
     constructor(game) {
         this.blockMap = new Map();

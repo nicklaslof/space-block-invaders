@@ -16,6 +16,7 @@ class World{
         this.noise3 = new SimplexNoise.SimplexNoise();
         this.spawnNewInvaderCounter = 400;
 
+        // Loop over the size of the world and create every chunk.
         for (let x = 0; x < sizeX*16; x+=16) {
             for (let z = 0; z < sizeZ*16; z+=16) {
                 var chunk = new Chunk(game, {x:x,z:z},this.noise,this.noise2,this.noise3);
@@ -24,20 +25,25 @@ class World{
             }
         }
 
+        // When all chunks have been created, loop over them to add decorations. The chunks bordering to the end of the world will not have decorations otherwise there would be trees cut in half
         this.chunks.forEach(c => {
             if (c.chunkPos.x > 1 && c.chunkPos.x < sizeX-1 && c.chunkPos.z > 1 && c.chunkPos.z < sizeZ-1)
             c.buildDecoration(game,this,this.noise,this.noise2,this.noise3);
             else console.log(c.worldPos);
         });
 
+        // Now when all blocks have been placed fill the level with sunlight
         this.chunks.forEach(c => {
             c.fillSunlight(game,this);
         });
+
+        // Recalculate each Mesh at the end. (In this stage it's the first mesh built)
         this.chunks.forEach(c => {
             c.recalculateMesh(game,this); 
         });
 
 
+        // Find a spawn position for the player where the player is on the ground with no surronding blocks blocking the movement
         var spawnPosition = null;
         var spawnTimeout = 1500;
         while(spawnPosition == null && spawnTimeout > 0){
@@ -70,21 +76,13 @@ class World{
         if (spawnPosition == null) console.log("no spawn found");
         this.player = new Player(spawnPosition.x,spawnPosition.y,spawnPosition.z);
         this.entities.push(this.player);
-
-        
-       // for (let i = 0; i < 30; i++) {
-       //     this.entities.push(new Invader(game,game.getRandomInt(0,128),55,game.getRandomInt(0,128)));
-       // }
-
-       
-        
     }
 
     tick(game){
 
 
+        // Spawn new invaders
         if (this.spawnNewInvaderCounter <0){
-
             this.spawnNewInvaderCounter = 1400;
             this.entities.push(new Invader(game,game.getRandomFloat(16,(this.sizeX*16)-16),40,game.getRandomFloat(16,(this.sizeZ*16)-16)));
 
@@ -96,6 +94,7 @@ class World{
            c.tick(game);
        });
 
+       // Tick entities and check collisions
         this.entities.forEach(e => {
             e.tick(game);
             // This is very inefficent. Should just check surrounding areas
@@ -112,6 +111,7 @@ class World{
             if (e.disposed) this.removeEntity(e);
         });
 
+        // Tick particles separetly to avoid collision checking
         this.particles.forEach(p => {
             p.tick(game);
             if (p.disposed) this.removeParticle(p);
@@ -132,12 +132,14 @@ class World{
         });
     }
 
+    // Get chunk based on world position. Floor it and divde by 16 to get the chunk position which is not the same as the worldposition (it's fixed to every 16x16 block)
     getChunk(x,z){
         var chunkX = Math.floor(x/16);
         var chunkZ = Math.floor(z/16);
         return this.chunks[chunkX + (chunkZ*this.sizeX)];
     }
 
+    // Find the chunk from the world position and set the block in that chunk
     setBlockAt(game, x,y,z,block,update=true){
 
         var chunk = this.getChunk(x,z);
@@ -197,6 +199,7 @@ class World{
         }
     }
 
+    // Actually not used.. Was used in my exeperiment of how much a minecraft clone could be done within 13kb
     rayPickBlock(game,x,y,z,direction,range){
         var rayPosition = {x:x,y:y,z:z};
         for (let i = 0; i < range; i++) {

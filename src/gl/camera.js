@@ -5,6 +5,7 @@ class Camera{
     constructor(gl, x,y,z){
         this.gl = gl;
         //The perspectivematrix that is used in the WebGL shader to calculate where in the world an object should be rendered in relation to the camera position
+        //There should probably be be a seperate viewMatrix and perspecitveMatrix here but for some reason this works without it. 
         this.perspectiveMatrix = matrix4.create();
         this.position = {x,y,z};
         this.currentRot = 0;

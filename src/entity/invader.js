@@ -17,6 +17,8 @@ class Invader extends Entity{
         this.shootCounter = 0;
      
         this.texture = new Texture(game.glTexture.tex,71,5,16,16);
+
+        // Build the Invader look by adding boxes
         var m = MeshBuilder.start(game.gl,x,y,z);
 
         this.c = this.baseColor = [1.0,1.0,0.0,0.1];
@@ -72,6 +74,8 @@ class Invader extends Entity{
     tick(game){
         super.tick(game);
         this.hitCounter--;
+
+        // Make the invader to shift to red when hit. Unfortunatly I couldnt get the mesh to change color..  I'm not sure why :( it used to work before...
         if (this.hitCCountDown>0) this.hitCCountDown--;
         if (this.changeBackCAfterHit && this.hitCCountDown <= 0){
             this.setC(this.baseColor);
@@ -84,6 +88,7 @@ class Invader extends Entity{
         this.playerShootCounter--;
 
         if (this.shootCounter <0){
+            // Limit shooting to once every second
             this.shootCounter = 60;
             var b = new Bullet(game,this.pos.x,this.pos.y+2,this.pos.z+6,{x:0,y:-1,z:0});
             b.speed = 0.5;
@@ -92,13 +97,14 @@ class Invader extends Entity{
             var distanceToPlayer = this.distanceToOtherEntity(game.world.player);
             var volume = (game.world.sizeX*16) - distanceToPlayer;
             volume /= game.world.sizeX*16;
-            if (volume > 0.5) volume *= 1.5;
+            if (volume > 0.8) volume *= 1.5;
             if (volume < 0.5) volume *= 0.75;
             volume = Math.max(0.1,Math.min(1.5,volume));
-            game.playInvaderShooting(volume);
+            game.playInvaderShooting(volume); // Set the volume based on distance to the player
 
 
             if (distanceToPlayer < 40 && this.playerShootCounter < 0){
+                // Aim and shoot a big bullet at the player every 2 second
                 this.playerShootCounter = 120;
                 var direction = {x:game.world.player.pos.x - this.pos.x, y: game.world.player.pos.y - this.pos.y, z: game.world.player.pos.z - (this.pos.z+6)};
                 this.normalize(direction);
@@ -129,6 +135,7 @@ class Invader extends Entity{
     }
 
     onCollision(game,world,e){
+        // Invader collided with an entity.
         super.onCollision(game, world,e);
         if (e.type == this.type || e.sourceEntityType == this.type) return;
         if (this.hitCounter <= 0){

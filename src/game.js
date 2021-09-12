@@ -47,6 +47,7 @@ class Game{
 
     mainLoop(){
 
+        // Render various UIs for intro and game over screens
         if (this.introShowing){
             this.input.tick(this);
             this.ui.render(this);
@@ -80,13 +81,14 @@ class Game{
 
         }
 
+        // Main loop. Do fixed timestep loop.
     
         var now = performance.now();
         var deltaTime = now - this.last;
         if (deltaTime>500) deltaTime = 16; // Dont allow too big jump in time.
         this.last = now;
         this.accumulator += deltaTime;
-        var ticked = true;
+        var ticked = false;
         this.counter += deltaTime;
 
         while(this.accumulator >= this.tickRate) {
@@ -97,6 +99,7 @@ class Game{
             ticked = true;
         }
 
+        // Don't render if the texture is still loading. If there was no ticks don't render anything. This will fix both ticks and rendering to 60fps
         if (ticked && !this.glTexture.dirty){
             var interpolationOffset = this.accumulator / this.tickRate;
             this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
@@ -113,6 +116,7 @@ class Game{
        }
 
 
+       // FPS counter
         if (this.counter > 1000){
             console.log(now/1000+ " FPS: "+this.fps);
             this.counter = this.fps = 0;
