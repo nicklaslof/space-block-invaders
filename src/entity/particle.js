@@ -6,7 +6,7 @@ class Particle extends Entity{
     constructor(game,x,y,z,direction,ttl,c){
         super(x,y,z);
         this.texture = new Texture(game.glTexture.tex,71,5,16,16);
-        var m = MeshBuilder.start(game.gl,x,y,z);
+        var m = MeshBuilder.start(game.gl,x,y,z,0.1);
         this.c = c;
         
         this.addBox(m,x,y,z,this.texture);

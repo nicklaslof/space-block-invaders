@@ -1,11 +1,12 @@
 import Mesh from "../gl/mesh.js";
-const baseSize = 0.5;
+let baseSize = 0.5;
 const white = [1,1,1,1];
 //Create a square mesh by batching the various sides of it.
 class MeshBuilder{
 
     //Create a new batch
-    static start(gl,x,y,z){
+    static start(gl,x,y,z,size=0.5){
+        baseSize = size;
         return {mesh:new Mesh(gl,x,y,z),verticies:[],colors:[],uvs:[],lights:[]};
     }
 

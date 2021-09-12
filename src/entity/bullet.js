@@ -9,7 +9,7 @@ class Bullet extends Entity{
         this.ttl = 100;
         this.direction = direction;
         this.texture = new Texture(game.glTexture.tex,71,5,16,16);
-        var m = MeshBuilder.start(game.gl,x,y,z);
+        var m = MeshBuilder.start(game.gl,x,y,z,0.1);
         this.c = c;
         this.addBox(m,x,y,z,this.texture);
 
