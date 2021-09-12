@@ -42,10 +42,10 @@ class World{
             spawnTimeout--;
             var x = game.getRandomInt(2,sizeX-2);
             var z = game.getRandomInt(2,sizeZ-2);
-            console.log(x + " "+z);
+            //console.log(x + " "+z);
 
             var c = this.chunks[x + (z*this.sizeX)];
-            console.log(c.worldPos);
+          //  console.log(c.worldPos);
             loop:for (let x = 0; x < 16; x++) {
 
                 for (let z = 0; z < 16; z++) {
@@ -53,9 +53,9 @@ class World{
                         var b = c.getBlockAt(x,y,z);
                         var b1 = c.getBlockAt(x,y+1,z);
                         var b2 = c.getBlockAt(x+1,y+1,z);
-                        var b3 = c.getBlockAt(x-1,y,z);
-                        var b4 = c.getBlockAt(x,y,z+1);
-                        var b5 = c.getBlockAt(x,y,z-1);
+                        var b3 = c.getBlockAt(x-1,y+1,z);
+                        var b4 = c.getBlockAt(x,y+1,z+1);
+                        var b5 = c.getBlockAt(x,y+1,z-1);
                         if (b == "g" && b1 == null && b2 == null && b3 == null && b4 == null && b5 == null){
                             spawnPosition = {x:c.worldPos.x+x,y:y+1,z:c.worldPos.z+z};
                             console.log(spawnPosition);
