@@ -16,7 +16,7 @@ class Invader extends Entity{
         this.hitCounter = 0;
         this.shootCounter = 0;
      
-        this.texture = new Texture(game.glTexture.tex,71,5,16,16);
+        this.texture = new Texture(game.glTexture.tex,72,6,14,14);
 
         // Build the Invader look by adding boxes
         var m = MeshBuilder.start(game.gl,x,y,z);

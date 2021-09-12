@@ -19,8 +19,8 @@ class Game{
 
 
         this.gameCanvas = document.getElementById("c");
-        this.gameCanvas.width = "1280";
-        this.gameCanvas.height = "768";
+        this.gameCanvas.width = W;
+        this.gameCanvas.height = H;
 
         
 
@@ -104,7 +104,7 @@ class Game{
             var interpolationOffset = this.accumulator / this.tickRate;
             this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
             if (this.world.player.hitCounter>1)this.gl.clearColor(1.0,0,0,1);
-            else this.gl.clearColor(0.1,0.5,0.9,1);
+            else this.gl.clearColor(0.3,0.7,0.9,1);
             this.gl.enable(this.gl.DEPTH_TEST);
             this.gl.depthFunc(this.gl.LESS);
             this.gl.enable(this.gl.CULL_FACE);

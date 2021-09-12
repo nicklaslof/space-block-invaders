@@ -25,6 +25,11 @@ class Entity {
             this.onDisposed(game);
         }
 
+                // Used for fixed timestep interpolation to keep track of position changes between each render call
+                this.previousPosition.x = this.pos.x;
+                this.previousPosition.y = this.pos.y;
+                this.previousPosition.z = this.pos.z;
+
         this.AABB.minX=this.pos.x;
         this.AABB.minY=this.pos.y;
         this.AABB.minZ=this.pos.z;
@@ -52,10 +57,7 @@ class Entity {
         
         }
 
-        // Used for fixed timestep interpolation to keep track of position changes between each render call
-        this.previousPosition.x = this.pos.x;
-        this.previousPosition.y = this.pos.y;
-        this.previousPosition.z = this.pos.z;
+
     }
 
     // Check if the entity can move by doing AABB intersects calls on surronding blocks. Doesn't return true or false but returns

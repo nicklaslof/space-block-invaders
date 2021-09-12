@@ -8,7 +8,7 @@ class Bullet extends Entity{
         this.type = "b"; // Silly quick way to check for entity types when doing collisions
         this.ttl = 100; // The life length of the bullet
         this.direction = direction; // The direction of the bullet
-        this.texture = new Texture(game.glTexture.tex,71,5,16,16); // The texture atlas location
+        this.texture = new Texture(game.glTexture.tex,72,6,14,14); // The texture atlas location
         var m = MeshBuilder.start(game.gl,x,y,z,size); // Create a Mesh with the specified size
         this.c = c;
         this.addBox(m,x,y,z,this.texture);

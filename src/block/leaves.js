@@ -3,7 +3,7 @@ import Block from "./block.js";
 
 class Leaves extends Block{
     constructor(game) {
-        super(game, "b",48,0,48,0,16,16);
+        super(game, "b",49,0,49,0,14,14);
         //this.topColor = this.sideColor = [0.7,0.7,0.7,1.0];
         this.blockColor1 = [0.9,0.89,0.14,1.0];
         this.blockColor2 = [0.9,0.87,0.14,1.0];

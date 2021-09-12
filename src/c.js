@@ -1,1 +1,1 @@
-const W=1024;const H=576;
+const W=1280;const H=768;
