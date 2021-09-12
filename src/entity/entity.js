@@ -25,10 +25,7 @@ class Entity {
             this.onDisposed(game);
         }
 
-                // Used for fixed timestep interpolation to keep track of position changes between each render call
-                this.previousPosition.x = this.pos.x;
-                this.previousPosition.y = this.pos.y;
-                this.previousPosition.z = this.pos.z;
+
 
         this.AABB.minX=this.pos.x;
         this.AABB.minY=this.pos.y;
@@ -56,7 +53,10 @@ class Entity {
             if (render)this.mesh.render(game.gl,game.shaderProgram,game.camera.perspectiveMatrix,game.glTexture,game.world.player.hitCounter>1?1:0);
         
         }
-
+        // Used for fixed timestep interpolation to keep track of position changes between each render call
+        this.previousPosition.x = this.pos.x;
+        this.previousPosition.y = this.pos.y;
+        this.previousPosition.z = this.pos.z;
 
     }
 

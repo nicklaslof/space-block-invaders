@@ -88,7 +88,7 @@ class Game{
         if (deltaTime>500) deltaTime = 16; // Dont allow too big jump in time.
         this.last = now;
         this.accumulator += deltaTime;
-        var ticked = false;
+        var ticked = true;
         this.counter += deltaTime;
 
         while(this.accumulator >= this.tickRate) {
