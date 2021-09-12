@@ -8,7 +8,7 @@ class Entity {
         this.tempVector = {x:0,y:0,z:0};
         this.speed = 0.1;
         this.disposed = false;
-        this.tempAABB = {x:0,y:0,z:0};
+        this.tempAABB = {minX:0,minY:0,minZ:0,maxX:0,maxY:0,maxZ:0};
         this.AABB = {minX:0,minY:0,minZ:0,maxX:0,maxY:0,maxZ:0};
         this.sizeX = 1;
         this.sizeY = 1;
@@ -64,7 +64,12 @@ class Entity {
     // the position of the block it collided with. This is used to set the position if the player is falling to fix the player above that block
     canMove(game, x,y,z){
         if (x > (game.world.sizeX*16)-2 || z > (game.world.sizeZ*16)-2 || x < 2 || z < 2) return {x:0,y:0,z:0};
-        this.tempAABB = {minX:x-(this.sizeX/2),minY:y,minZ:z-(this.sizeX/2),maxX:x+(this.sizeX/2),maxY:y+this.sizeY,maxZ:z+(this.sizeZ/2)};
+        this.tempAABB.minX=x-(this.sizeX/2);
+        this.tempAABB.minY=y;
+        this.tempAABB.minZ=z-(this.sizeX/2);
+        this.tempAABB.maxX=x+(this.sizeX/2);
+        this.tempAABB.maxY=y+this.sizeY;
+        this.tempAABB.maxZ=z+(this.sizeZ/2);
         var radius = 0.5;
         let x1 = Math.round(x + radius);
         let z1 = Math.round(z + radius);

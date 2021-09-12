@@ -51,8 +51,8 @@ class Player extends Entity{
 
 
         // Rotate the camera based on mouse input
-        game.camera.rotate((game.input.getMouseX()/9) * 0.016);
-        game.camera.rotateX((game.input.getMouseY()/9) * 0.016);
+        game.camera.rotate((game.input.getMouseX()/6) * 0.016);
+        game.camera.rotateX((game.input.getMouseY()/6) * 0.016);
 
         // The direction the camera is facing. Used for getting strafing right and also for shooting bullets in the correct direction
         let cameraDirection = game.camera.getDirection();

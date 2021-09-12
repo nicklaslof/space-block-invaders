@@ -5,7 +5,7 @@ class UI{
         this.cv.height = H;
         this.ctx = this.cv.getContext('2d');
         this.ctx.imageSmoothingEnabled = false;
-        this.cv.addEventListener('click', (e) => { this.cv.requestPointerLock();});
+        this.cv.addEventListener('click', (e) => { this.cv.requestPointerLock(); this.mouseLocked = true;});
         this.texture = texture;
 
        
@@ -14,7 +14,9 @@ class UI{
 
     render(game){
         this.ctx.clearRect(0,0,W,H);
-
+        if (!this.mouseLocked && !game.introShowing && !game.generating){
+            this.drawTextAt("Click inside this window to lock the mouse",(W/2)-180,(H/2)+10,"white",16);
+        }
         if (game.introShowing){
             this.drawTextAt("Space block invaders",(W/2)-155,H/2,"white",24);
             this.drawTextAt("A game for JS13k 2021 by Nicklas Löf",(W/2)-180,(H/2)+30,"white",16);
@@ -30,7 +32,7 @@ class UI{
             this.drawTextAt("+",W/2,H/2,"white",32);
             var playerHealth = game.world.player.health;
             for (let i = 0; i < playerHealth; i++) {
-                this.ctx.drawImage(this.texture,20,4,8,8,16 + (32*i),16,32,32);     
+                this.ctx.drawImage(this.texture,20,4,8,8,16 + (48*i),16,48,48);     
             }
             
     

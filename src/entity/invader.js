@@ -8,7 +8,9 @@ class Invader extends Entity{
     constructor(game, x, y, z) {
         super(x,y,z);
         this.type = "i";
-
+        this.bulletColor = [0.5,0.5,1.0,1.0];
+        this.hitColor = [0.8,0.3,0.3,1.0];
+        this.particleDirection = {x:0,y:-1,z:0};
         this.health = 5;
      
         this.hitCCountDown = 0;
@@ -109,7 +111,7 @@ class Invader extends Entity{
                 var direction = {x:game.world.player.pos.x - this.pos.x, y: game.world.player.pos.y - this.pos.y, z: game.world.player.pos.z - (this.pos.z+6)};
                 this.normalize(direction);
                 console.log(direction);
-                var b = new Bullet(game,this.pos.x,this.pos.y,this.pos.z+6,direction,[0.5,0.5,1.0,1.0],1);
+                var b = new Bullet(game,this.pos.x,this.pos.y,this.pos.z+6,direction,this.bulletColor,1);
                 b.speed = 0.8;
                 b.sourceEntityType = this.type;
                 b.sizeX = b.sizeY = 4;
@@ -140,7 +142,7 @@ class Invader extends Entity{
         if (e.type == this.type || e.sourceEntityType == this.type) return;
         if (this.hitCounter <= 0){
             for (let i = 0; i < game.getRandomInt(5,10); i++) {
-                world.addParticle(game,game.getRandomFloat(this.pos.x-1,this.pos.x+2),game.getRandomFloat(this.pos.y,this.pos.y+8),game.getRandomFloat(this.pos.z,this.pos.z+12),{x:0,y:-1,z:0},120);
+                world.addParticle(game,game.getRandomFloat(this.pos.x-1,this.pos.x+2),game.getRandomFloat(this.pos.y,this.pos.y+8),game.getRandomFloat(this.pos.z,this.pos.z+12),this.particleDirection,120,this.hitColor,0.25);
             }
             this.setC([0,0,0,1]);
             this.hitCCountDown = 40;
@@ -157,7 +159,7 @@ class Invader extends Entity{
         game.playInvaderDied();
         for (let i = 0; i < game.getRandomInt(5,10); i++) {
             game.world.addParticle(game,game.getRandomFloat(this.pos.x-1,this.pos.x+2),game.getRandomFloat(this.pos.y,this.pos.y+8),game.getRandomFloat(this.pos.z,this.pos.z+12),
-            {x:game.getRandomFloat(-1,1),y:game.getRandomFloat(-1,0),z:game.getRandomFloat(-1,1)},120);
+            {x:game.getRandomFloat(-1,1),y:game.getRandomFloat(-1,0),z:game.getRandomFloat(-1,1)},120,this.hitColor,0.25);
         }
     }
 
