@@ -43,6 +43,7 @@ class Player extends Entity{
                 // If we collided with something (on the Y axis) fix the player position to that block and disable jump
                 this.pos.y = b.y;
                 this.jump = false;
+                game.playPlayerLanded();
             }
             //If we have done a full jump up and back down disable jump
             if (this.jumpAngle >= (Math.PI*2)) this.jump = false;
@@ -97,7 +98,7 @@ class Player extends Entity{
 
         // Always check if the player can fall down. Also increase the fall speed the longer in the air.
         var increasedFallSpeed = (this.timeFallen)+1;
-        if (this.timeFallen >0) console.log(this.timeFallen);
+        if (this.timeFallen >0) this.playerOnGround = false;
         this.tempVector.y = this.pos.y - (Math.min(increasedFallSpeed,40)/60);
 
         // Check if we are on ground or not (colliding with a block in the direction moving down)
@@ -111,11 +112,18 @@ class Player extends Entity{
             if (!this.jump){
                 this.timeFallen = 0;
                 this.pos.y = groundBlock.y;
+                if (!this.playerOnGround){
+                    game.playPlayerLanded();
+                    this.playerOnGround = true;
+                }
+                
             }
             // If we are on ground and not already jumping check for player jump input.
             if(game.input.firePressed && !this.jump){
                 this.jumpAngle = 0;
                 this.jump = true;
+                this.playerOnGround = false;
+                game.playPlayerJumped();
             }
         }
         
