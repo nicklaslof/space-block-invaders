@@ -13,7 +13,7 @@ class Player extends Entity{
         this.jump = false;
         this.jumpCounter = 0;
         this.timeFallen = 0;
-        this.speed = 5;
+        this.speed = 0.25;
         this.shootDelay = 0;
         this.health = 5;
         this.hitCounter = 0;
@@ -78,7 +78,7 @@ class Player extends Entity{
             //combine forward/backward movement with strafe movement and multiply that with the direction the camera is facing
             this.tempVector.x = cameraDirection.x * this.velocity.z + this.strafe.x;
             this.tempVector.z = cameraDirection.z * this.velocity.z + this.strafe.z;
-
+            this.tempVector.y = 0;
             //normalize it to prevent moving faster when strafing and moving forward/backward at the same time
             this.normalize(this.tempVector);
 
@@ -89,7 +89,7 @@ class Player extends Entity{
             //finally add the current position of the player to the calculated movement vector
             this.tempVector.x += this.pos.x;
             this.tempVector.z += this.pos.z;
-            
+
             //check if the player can move in X or Z direction separetly to allow sliding on the walls. Otherwise the player would get stuck when close to a wall
             //which would be very annoying. If the player can move to the new position then transform the current position to that position.
             if (this.canMove(game,this.tempVector.x,this.pos.y, this.pos.z)==null && this.canMove(game,this.tempVector.x,this.pos.y+1, this.pos.z)==null) this.pos.x += this.tempVector.x-this.pos.x;
