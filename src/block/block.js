@@ -1,5 +1,6 @@
 import Texture from "../gl/texture.js";
 
+// Base class for a block
 class Block{
     constructor(game,id,texSideX,texSideY,texTopX,texTopY,texW,texH) {
         this.id = id;
@@ -7,18 +8,22 @@ class Block{
         this.sideColor = [1.0,1.0,1.0,1.0];
         this.sideTexture = new Texture(game.glTexture.tex,texSideX,texSideY,texW,texH);
         this.topTexture = new Texture(game.glTexture.tex,texTopX,texTopY,texW,texH);
+        this.blockAABB = {minX:0,minY:0,minZ:0,maxX:0,maxY:0,maxZ:0};
+        // It can have different textures on sides and top
     }
 
+    // Generate 
     intersects(blockPos,checkAABB){
-        var blockAABB = {minX:blockPos.x-0.5,minY:blockPos.y,minZ:blockPos.z-0.5,maxX:blockPos.x+0.5,maxY:blockPos.y+1,maxZ:blockPos.z+0.5};
-       // console.log(blockAABB);
-       // console.log(checkAABB);
-       // console.log(checkAABB.minY <= blockAABB.maxY && checkAABB.maxY >= blockAABB.minY);
-       // if (checkAABB.minY <= blockAABB.maxY && checkAABB.maxY >= blockAABB.minY) return true;
+        this.blockAABB.minX=blockPos.x-0.5;
+        this.blockAABB.minY=blockPos.y;
+        this.blockAABB.minZ=blockPos.z-0.5;
+        this.blockAABB.maxX=blockPos.x+0.5;
+        this.blockAABB.maxY=blockPos.y+1;
+        this.blockAABB.maxZ=blockPos.z+0.5;
        
-        return (checkAABB.minX <= blockAABB.maxX && checkAABB.maxX >= blockAABB.minX) &&
-         (checkAABB.minY <= blockAABB.maxY && checkAABB.maxY >= blockAABB.minY) &&
-         (checkAABB.minZ <= blockAABB.maxZ && checkAABB.maxZ >= blockAABB.minZ);
+        return (checkAABB.minX <= this.blockAABB.maxX && checkAABB.maxX >= this.blockAABB.minX) &&
+         (checkAABB.minY <= this.blockAABB.maxY && checkAABB.maxY >= this.blockAABB.minY) &&
+         (checkAABB.minZ <= this.blockAABB.maxZ && checkAABB.maxZ >= this.blockAABB.minZ);
     }
 
     getTopColor(x,y,z){
