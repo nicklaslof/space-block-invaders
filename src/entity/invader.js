@@ -24,41 +24,41 @@ class Invader extends Entity{
         var m = MeshBuilder.start(game.gl,x,y,z);
 
         this.c = this.baseColor = [1.0,1.0,0.0,0.1];
-        this.addBox(m,x,y+6,z+3,this.texture);
-        this.addBox(m,x,y+6,z+9,this.texture);
-        this.addBox(m,x,y+5,z+4,this.texture);
-        this.addBox(m,x,y+5,z+8,this.texture);
-        for (let i = 3; i < 10; i++) this.addBox(m,x,y+5,z+i,this.texture);
+        this.addBox(m,0,6,3,this.texture);
+        this.addBox(m,0,6,9,this.texture);
+        this.addBox(m,0,5,4,this.texture);
+        this.addBox(m,0,5,8,this.texture);
+        for (let i = 3; i < 10; i++) this.addBox(m,0,5,i,this.texture);
      
             
 
-        this.addBox(m,x,y+4,z+2,this.texture);
-        this.addBox(m,x,y+4,z+3,this.texture);
+        this.addBox(m,0,4,2,this.texture);
+        this.addBox(m,0,4,3,this.texture);
 
-        this.addBox(m,x,y+4,z+5,this.texture);
-        this.addBox(m,x,y+4,z+6,this.texture);
-        this.addBox(m,x,y+4,z+7,this.texture);
+        this.addBox(m,0,4,5,this.texture);
+        this.addBox(m,0,4,6,this.texture);
+        this.addBox(m,0,4,7,this.texture);
 
-        this.addBox(m,x,y+4,z+9,this.texture);
-        this.addBox(m,x,y+4,z+10,this.texture);
+        this.addBox(m,0,4,9,this.texture);
+        this.addBox(m,0,4,10,this.texture);
 
-        for (let i = 1; i < 12; i++) this.addBox(m,x,y+3,z+i,this.texture);
+        for (let i = 1; i < 12; i++) this.addBox(m,0,3,i,this.texture);
 
-        this.addBox(m,x,y+3,z+1,this.texture);
-        for (let i = 3; i < 10; i++) this.addBox(m,x,y+3,z+i,this.texture);
-        this.addBox(m,x,y+3,z+11,this.texture);
+        this.addBox(m,0,3,1,this.texture);
+        for (let i = 3; i < 10; i++) this.addBox(m,0,3,i,this.texture);
+        this.addBox(m,0,3,11,this.texture);
 
-        this.addBox(m,x,y+2,z+1,this.texture);
-        this.addBox(m,x,y+2,z+3,this.texture);
+        this.addBox(m,0,2,1,this.texture);
+        this.addBox(m,0,2,3,this.texture);
 
-        this.addBox(m,x,y+2,z+9,this.texture);
-        this.addBox(m,x,y+2,z+11,this.texture);
+        this.addBox(m,0,2,9,this.texture);
+        this.addBox(m,0,2,11,this.texture);
 
-        this.addBox(m,x,y+1,z+4,this.texture);
-        this.addBox(m,x,y+1,z+5,this.texture);
+        this.addBox(m,0,1,4,this.texture);
+        this.addBox(m,0,1,5,this.texture);
 
-        this.addBox(m,x,y+1,z+7,this.texture);
-        this.addBox(m,x,y+1,z+8,this.texture);
+        this.addBox(m,0,1,7,this.texture);
+        this.addBox(m,0,1,8,this.texture);
 
         this.mesh = MeshBuilder.build(m);
         this.mesh.setPos(x, y, z);

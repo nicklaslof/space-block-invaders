@@ -71,7 +71,6 @@ class Chunk{
 
 
         this.mesh = MeshBuilder.build(m);
-        this.mesh.t(this.worldPos.x, 0, this.worldPos.z);
         this.mesh.updateMesh();
         this.mesh.cleanUp();
     }

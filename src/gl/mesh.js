@@ -8,13 +8,13 @@ class Mesh{
         this.verticies = [];
         this.modelViewMatrix = matrix4.create();
         this.position = [x,y,z];
-        this.setPos(x,y,z);
 
         this.scale = [1,1,1];
         this.gl = gl;
         this.quaternion = quaternion.create();
         this.rotX = 0;
         this.rotY = 0;
+        this.setPos(x,y,z);
         //Got away with a few extra bytes by assigning these WebGL statics to class variables
         this.arrayBuffer = gl.ARRAY_BUFFER;
         this.dynamicDraw = gl.DYNAMIC_DRAW;
@@ -90,23 +90,13 @@ class Mesh{
  
 
     }
-    //Translate this mesh
-    t(x, y, z){
-        var v = [x-this.position[0],y-this.position[1],z-this.position[2]];
-        matrix4.translate(this.modelViewMatrix,this.modelViewMatrix,this.position);
-
-        this.position[0] = x;
-        this.position[1] = y;
-        this.position[2] = z;
-    }
 
     //Move this mesh to a new position.
     setPos(x, y, z){
-        var v = [x-this.position[0],y-this.position[1],z-this.position[2]];
-        matrix4.translate(this.modelViewMatrix,this.modelViewMatrix,v);
         this.position[0] = x;
         this.position[1] = y;
         this.position[2] = z;
+        this.updateMatrix();
     }
     //Scale the mesh
     setS(s){
@@ -147,9 +137,8 @@ class Mesh{
         this.updateMatrix();
     }
 
-    //Having some serious issues with getting this to work correctly. "My code works, I don't know why"
     updateMatrix(){
-        //matrix4.fromRotationTranslationScale(this.modelViewMatrix, this.quaternion, [this.position.x, this.position.y, this.position.z],this.scale);
+        matrix4.fromRotationTranslationScale(this.modelViewMatrix, this.quaternion, this.position,this.scale);
     }
 
     updateCols(c){

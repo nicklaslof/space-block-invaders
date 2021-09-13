@@ -11,7 +11,7 @@ class Bullet extends Entity{
         this.texture = new Texture(game.glTexture.tex,72,6,14,14); // The texture atlas location
         var m = MeshBuilder.start(game.gl,x,y,z,size); // Create a Mesh with the specified size
         this.c = c;
-        this.addBox(m,x,y,z,this.texture);
+        this.addBox(m,0,0,0,this.texture);
 
         this.mesh = MeshBuilder.build(m);
         this.mesh.updateMesh();
